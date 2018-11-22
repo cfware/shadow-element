@@ -1,0 +1,47 @@
+{
+	"name": "@cfware/shadow-element",
+	"version": "0.1.0",
+	"description": "My HyperHTML based shadow element",
+	"main": "index.js",
+	"scripts": {
+		"test": "xo"
+	},
+	"engines": {
+		"node": ">=8"
+	},
+	"author": "Corey Farrell",
+	"license": "MIT",
+	"files": [
+		"index.js"
+	],
+	"keywords": [],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/cfware/shadow-element.git"
+	},
+	"bugs": {
+		"url": "https://github.com/cfware/shadow-element/issues"
+	},
+	"homepage": "https://github.com/cfware/shadow-element#readme",
+	"dependencies": {
+		"camelcase": "^5.0.0",
+		"hyperhtml": "^2.18.0"
+	},
+	"devDependencies": {
+		"xo": "^0.23.0"
+	},
+	"xo": {
+		"overrides": [
+			{
+				"files": [
+					"index.js",
+					"test/fixtures/**"
+				],
+				"envs": [
+					"browser",
+					"es6"
+				]
+			}
+		]
+	}
+}
