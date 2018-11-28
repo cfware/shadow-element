@@ -1,57 +1,41 @@
 import {wire, bind, define} from 'hyperhtml/esm';
 import camelCase from 'camelcase';
 
-export {wire, bind};
+export {wire, bind, define};
 
 define('get-reference', (node, value) => {
 	value(node);
 });
 
-export function setAttrs(ele, attrs) {
-	Object.entries(attrs).forEach(([attr, value]) => {
-		ele.setAttribute(attr, value);
-	});
+export function wirePrivates(Class, props) {
+	Object.entries(props).forEach(([name, value]) => {
+		const privName = `_${name}`;
 
-	return ele;
-}
-
-export function setProps(ele, props) {
-	Object.entries(props).forEach(([prop, value]) => {
-		ele[prop] = value;
-	});
-
-	return ele;
-}
-
-export function createElement(tagName, props) {
-	return setProps(document.createElement(tagName), props);
-}
-
-export function wirePrivate(Class, prop, value) {
-	const privName = `_${prop}`;
-
-	Object.defineProperty(Class.prototype, privName, {value, writable: true});
-	Object.defineProperty(Class.prototype, prop, {
-		enumerable: true,
-		get() {
-			return this[privName];
-		}
+		Object.defineProperty(Class.prototype, privName, {value, writable: true});
+		Object.defineProperty(Class.prototype, name, {
+			enumerable: true,
+			get() {
+				return this[privName];
+			}
+		});
 	});
 }
 
-export function wireRender(Class, prop, value) {
-	const privName = `_${prop}`;
+export function wireRenders(Class, props) {
+	Object.entries(props).forEach(([name, value]) => {
+		const privName = `_${name}`;
 
-	Object.defineProperty(Class.prototype, privName, {value, writable: true});
-	Object.defineProperty(Class.prototype, prop, {
-		enumerable: true,
-		get() {
-			return this[privName];
-		},
-		set(value) {
-			this[privName] = value;
-			this.render();
-		}
+		Object.defineProperty(Class.prototype, privName, {value, writable: true});
+		Object.defineProperty(Class.prototype, name, {
+			enumerable: true,
+			get() {
+				return this[privName];
+			},
+			set(value) {
+				this[privName] = value;
+				this.render();
+			}
+		});
 	});
 }
 
@@ -113,6 +97,10 @@ export class ShadowElement extends HTMLElement {
 		const proto = this.prototype;
 		const Super = Object.getPrototypeOf(this);
 		const observedAttributes = this.observedAttributes || [];
+
+		if (options.renderProperties) {
+			wireRenders(this, options.renderProperties);
+		}
 
 		Object.entries(options.attributes || {}).forEach(([name, defaultValue]) => {
 			if (!observedAttributes.includes(name)) {
