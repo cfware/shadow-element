@@ -74,6 +74,24 @@ export function wireBasicPropAttr(Class, name, defaultValue) {
 	});
 }
 
+export function wireNumericPropAttr(Class, name, defaultValue = 0) {
+	const propName = camelCase(name);
+
+	Object.defineProperty(Class, propName, {
+		enumerable: true,
+		get() {
+			return this.hasAttribute(name) ? Number(this.getAttribute(name)) : defaultValue;
+		},
+		set(value) {
+			if (typeof value === 'undefined') {
+				this.removeAttribute(name);
+			} else {
+				this.setAttribute(name, value);
+			}
+		}
+	});
+}
+
 export const metaLink = (url, metaURL) => new URL(url, metaURL).toString();
 
 export class ShadowElement extends HTMLElement {
