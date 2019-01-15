@@ -1,6 +1,6 @@
 {
 	"name": "@cfware/shadow-element",
-	"version": "0.2.1",
+	"version": "0.3.0",
 	"description": "My HyperHTML based shadow element",
 	"main": "index.js",
 	"scripts": {
@@ -24,11 +24,10 @@
 	},
 	"homepage": "https://github.com/cfware/shadow-element#readme",
 	"dependencies": {
-		"camelcase": "^5.0.0",
-		"hyperhtml": "^2.18.0"
+		"hyperhtml": "^2.25.3"
 	},
 	"devDependencies": {
-		"xo": "^0.23.0"
+		"xo": "^0.24.0"
 	},
 	"xo": {
 		"overrides": [
@@ -40,7 +39,10 @@
 				"envs": [
 					"browser",
 					"es6"
-				]
+				],
+				"rules": {
+					"no-eq-null": "off"
+				}
 			}
 		]
 	}

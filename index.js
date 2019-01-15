@@ -1,5 +1,4 @@
 import {wire, bind, define} from 'hyperhtml/esm';
-import camelCase from 'camelcase';
 
 export {wire, bind, define};
 
@@ -39,56 +38,79 @@ export function wireRenders(Class, props) {
 	});
 }
 
-export function wireBooleanPropAttr(Class, name) {
-	const propName = camelCase(name);
+export default function decamelizePropName(name) {
+	return name
+		.replace(/([a-z\d])([A-Z])/gu, '$1-$2')
+		.replace(/([a-z]+)([A-Z][a-z\d]+)/gu, '$1-$2')
+		.toLowerCase();
+}
 
-	Object.defineProperty(Class, propName, {
-		get() {
-			return this.hasAttribute(name);
-		},
-		set(value) {
-			if (value) {
-				this.setAttribute(name, '');
-			} else {
-				this.removeAttribute(name);
+function appendObservedAttributes(list, name) {
+	if (list && !list.includes(name)) {
+		list.push(name);
+	}
+}
+
+export function reflectBooleanProps(proto, names, observedAttributes) {
+	names.forEach(name => {
+		const attrName = decamelizePropName(name);
+
+		appendObservedAttributes(observedAttributes, attrName);
+		Object.defineProperty(proto, name, {
+			enumerable: true,
+			get() {
+				return this.hasAttribute(attrName);
+			},
+			set(value) {
+				if (value) {
+					this.setAttribute(attrName, '');
+				} else {
+					this.removeAttribute(attrName);
+				}
 			}
-		}
+		});
 	});
 }
 
-export function wireBasicPropAttr(Class, name, defaultValue) {
-	const propName = camelCase(name);
+export function reflectStringProps(proto, items, observedAttributes) {
+	Object.entries(items).forEach(([name, defaultValue]) => {
+		const attrName = decamelizePropName(name);
 
-	Object.defineProperty(Class, propName, {
-		enumerable: true,
-		get() {
-			return this.hasAttribute(name) ? this.getAttribute(name) : defaultValue;
-		},
-		set(value) {
-			if (typeof value === 'undefined') {
-				this.removeAttribute(name);
-			} else {
-				this.setAttribute(name, value);
+		appendObservedAttributes(observedAttributes, attrName);
+		Object.defineProperty(proto, name, {
+			enumerable: true,
+			get() {
+				return this.hasAttribute(attrName) ? this.getAttribute(attrName) : String(defaultValue);
+			},
+			set(value) {
+				if (value == null) { // eslint-disable-line eqeqeq
+					this.removeAttribute(attrName);
+				} else {
+					this.setAttribute(attrName, value);
+				}
 			}
-		}
+		});
 	});
 }
 
-export function wireNumericPropAttr(Class, name, defaultValue = 0) {
-	const propName = camelCase(name);
+export function reflectNumericProps(proto, items, observedAttributes) {
+	Object.entries(items).forEach(([name, defaultValue]) => {
+		const attrName = decamelizePropName(name);
 
-	Object.defineProperty(Class, propName, {
-		enumerable: true,
-		get() {
-			return this.hasAttribute(name) ? Number(this.getAttribute(name)) : defaultValue;
-		},
-		set(value) {
-			if (typeof value === 'undefined') {
-				this.removeAttribute(name);
-			} else {
-				this.setAttribute(name, value);
+		appendObservedAttributes(observedAttributes, attrName);
+		Object.defineProperty(proto, name, {
+			enumerable: true,
+			get() {
+				return this.hasAttribute(attrName) ? Number(this.getAttribute(name)) : (defaultValue || 0);
+			},
+			set(value) {
+				if (value == null) { // eslint-disable-line eqeqeq
+					this.removeAttribute(attrName);
+				} else {
+					this.setAttribute(attrName, value);
+				}
 			}
-		}
+		});
 	});
 }
 
@@ -114,19 +136,15 @@ export class ShadowElement extends HTMLElement {
 	static define(elementName, options = {}) {
 		const proto = this.prototype;
 		const Super = Object.getPrototypeOf(this);
-		const observedAttributes = this.observedAttributes || [];
+		const observedAttributes = [...(this.observedAttributes || [])];
 
 		if (options.renderProperties) {
 			wireRenders(this, options.renderProperties);
 		}
 
-		Object.entries(options.attributes || {}).forEach(([name, defaultValue]) => {
-			if (!observedAttributes.includes(name)) {
-				observedAttributes.push(name);
-			}
-
-			wireBasicPropAttr(proto, name, defaultValue);
-		});
+		reflectStringProps(proto, options.stringProps || {}, observedAttributes);
+		reflectNumericProps(proto, options.numericProps || {}, observedAttributes);
+		reflectBooleanProps(proto, options.booleanProps || [], observedAttributes);
 
 		if (observedAttributes.length > 0) {
 			Object.defineProperty(proto, 'observedAttributes', {
