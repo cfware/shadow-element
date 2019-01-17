@@ -2,7 +2,7 @@
 	"name": "@cfware/shadow-element",
 	"version": "0.3.1",
 	"description": "My HyperHTML based shadow element",
-	"main": "index.js",
+	"main": "shadow-element.js",
 	"scripts": {
 		"test": "xo"
 	},
@@ -12,7 +12,7 @@
 	"author": "Corey Farrell",
 	"license": "MIT",
 	"files": [
-		"index.js"
+		"shadow-element.js"
 	],
 	"keywords": [],
 	"repository": {
@@ -33,7 +33,7 @@
 		"overrides": [
 			{
 				"files": [
-					"index.js",
+					"shadow-element.js",
 					"test/fixtures/**"
 				],
 				"envs": [
