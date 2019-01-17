@@ -101,7 +101,7 @@ export function reflectNumericProps(proto, items, observedAttributes) {
 		Object.defineProperty(proto, name, {
 			enumerable: true,
 			get() {
-				return this.hasAttribute(attrName) ? Number(this.getAttribute(name)) : (defaultValue || 0);
+				return this.hasAttribute(attrName) ? Number(this.getAttribute(attrName)) : (defaultValue || 0);
 			},
 			set(value) {
 				if (value == null) { // eslint-disable-line eqeqeq
