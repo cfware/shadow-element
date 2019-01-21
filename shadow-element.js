@@ -1,4 +1,5 @@
 import {wire, bind, define} from 'hyperhtml/esm';
+import {Debouncer} from '@cfware/debouncer';
 
 export {wire, bind, define};
 
@@ -32,7 +33,7 @@ export function wireRenders(Class, props) {
 			},
 			set(value) {
 				this[privName] = value;
-				this.render();
+				this._render();
 			}
 		});
 	});
@@ -120,17 +121,20 @@ export class ShadowElement extends HTMLElement {
 	constructor(mode = 'open', htmlFn = 'html') {
 		super();
 
+		const debouncer = new Debouncer(() => this.render(), 10, 5);
+		this._render = () => debouncer.run();
 		Object.defineProperty(this, htmlFn, {
 			value: bind(this.attachShadow({mode}))
 		});
 	}
 
 	connectedCallback() {
+		// Don't debounce the initial render
 		this.render();
 	}
 
 	attributeChangedCallback() {
-		this.render();
+		this._render();
 	}
 
 	static define(elementName, options = {}) {
