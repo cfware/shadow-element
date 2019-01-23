@@ -1,4 +1,4 @@
-import {wire, bind, define} from 'hyperhtml/esm';
+import {wire, bind, define} from 'hyperhtml';
 import {Debouncer} from '@cfware/debouncer';
 
 export {wire, bind, define};

@@ -1,6 +1,6 @@
 {
 	"name": "@cfware/shadow-element",
-	"version": "0.3.3",
+	"version": "0.3.4",
 	"description": "My HyperHTML based shadow element",
 	"main": "shadow-element.js",
 	"scripts": {
@@ -24,8 +24,8 @@
 	},
 	"homepage": "https://github.com/cfware/shadow-element#readme",
 	"dependencies": {
-		"@cfware/debouncer": "^0.1.0",
-		"hyperhtml": "^2.25.3"
+		"@cfware/debouncer": "^0.2.0",
+		"hyperhtml": "^2.25.4"
 	},
 	"devDependencies": {
 		"xo": "^0.24.0"
