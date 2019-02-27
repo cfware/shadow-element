@@ -1,62 +1,43 @@
-import {wire, bind, define} from 'hyperhtml';
+import {wire, bind} from 'hyperhtml';
 import {Debouncer} from '@cfware/debouncer';
 
-export {wire, bind, define};
+export {wire, bind};
 
-define('get-reference', (node, value) => {
-	value(node);
-});
-
-export function wirePrivates(Class, props) {
-	Object.entries(props).forEach(([name, value]) => {
-		const privName = `_${name}`;
-
-		Object.defineProperty(Class.prototype, privName, {value, writable: true});
-		Object.defineProperty(Class.prototype, name, {
-			enumerable: true,
-			get() {
-				return this[privName];
-			}
-		});
-	});
-}
-
-export function wireRenders(Class, props) {
-	Object.entries(props).forEach(([name, value]) => {
-		const privName = `_${name}`;
-
-		Object.defineProperty(Class.prototype, privName, {value, writable: true});
-		Object.defineProperty(Class.prototype, name, {
-			enumerable: true,
-			get() {
-				return this[privName];
-			},
-			set(value) {
-				this[privName] = value;
-				this._render();
-			}
-		});
-	});
-}
-
-export default function decamelizePropName(name) {
+function decamelizePropName(name) {
 	return name
 		.replace(/([a-z\d])([A-Z])/gu, '$1-$2')
 		.replace(/([a-z]+)([A-Z][a-z\d]+)/gu, '$1-$2')
 		.toLowerCase();
 }
 
-function appendObservedAttributes(list, name) {
-	if (list && !list.includes(name)) {
-		list.push(name);
-	}
+function wireRenderProps(proto, props) {
+	Object.entries(props).forEach(([name, value]) => {
+		const privSymbol = Symbol(name);
+
+		Object.defineProperties(proto, {
+			[privSymbol]: {
+				value,
+				writable: true
+			},
+			[name]: {
+				enumerable: true,
+				get() {
+					return this[privSymbol];
+				},
+				set(value) {
+					this[privSymbol] = value;
+					this._render();
+				}
+			}
+		});
+	});
 }
 
-export function reflectBooleanProps(proto, names, observedAttributes) {
+function reflectBooleanProps(proto, names, observedAttributes) {
 	names.forEach(name => {
 		const attrName = decamelizePropName(name);
 
-		appendObservedAttributes(observedAttributes, attrName);
+		observedAttributes.add(attrName);
 		Object.defineProperty(proto, name, {
 			enumerable: true,
 			get() {
@@ -73,11 +54,11 @@ export function reflectBooleanProps(proto, names, observedAttributes) {
 	});
 }
 
-export function reflectStringProps(proto, items, observedAttributes) {
+function reflectStringProps(proto, items, observedAttributes) {
 	Object.entries(items).forEach(([name, defaultValue]) => {
 		const attrName = decamelizePropName(name);
 
-		appendObservedAttributes(observedAttributes, attrName);
+		observedAttributes.add(attrName);
 		Object.defineProperty(proto, name, {
 			enumerable: true,
 			get() {
@@ -94,15 +75,15 @@ export function reflectStringProps(proto, items, observedAttributes) {
 	});
 }
 
-export function reflectNumericProps(proto, items, observedAttributes) {
+function reflectNumericProps(proto, items, observedAttributes) {
 	Object.entries(items).forEach(([name, defaultValue]) => {
 		const attrName = decamelizePropName(name);
 
-		appendObservedAttributes(observedAttributes, attrName);
+		observedAttributes.add(attrName);
 		Object.defineProperty(proto, name, {
 			enumerable: true,
 			get() {
-				return this.hasAttribute(attrName) ? Number(this.getAttribute(attrName)) : (defaultValue || 0);
+				return this.hasAttribute(attrName) ? Number(this.getAttribute(attrName)) : defaultValue;
 			},
 			set(value) {
 				if (value == null) { // eslint-disable-line eqeqeq
@@ -139,44 +120,22 @@ export class ShadowElement extends HTMLElement {
 
 	static define(elementName, options = {}) {
 		const proto = this.prototype;
-		const Super = Object.getPrototypeOf(this);
-		const observedAttributes = [...(this.observedAttributes || [])];
+		const observedAttributes = new Set(this.observedAttributes);
 
-		if (options.renderProperties) {
-			wireRenders(this, options.renderProperties);
-		}
-
+		wireRenderProps(proto, options.renderProps || {});
 		reflectStringProps(proto, options.stringProps || {}, observedAttributes);
 		reflectNumericProps(proto, options.numericProps || {}, observedAttributes);
 		reflectBooleanProps(proto, options.booleanProps || [], observedAttributes);
 
-		if (observedAttributes.length > 0) {
-			Object.defineProperty(proto, 'observedAttributes', {
+		if (observedAttributes.size > 0) {
+			Object.defineProperty(this, 'observedAttributes', {
 				get() {
 					return observedAttributes;
 				}
 			});
 		}
 
-		if (options.extends) {
-			const Native = document.createElement(options.extends).constructor;
-			const Intermediate = class extends Native {};
-			const ownKeys = o => Object.getOwnPropertyNames(o).concat(Object.getOwnPropertySymbols(o));
-			const keys = ['length', 'name', 'arguments', 'caller', 'prototype'];
-
-			ownKeys(Super).filter(key => keys.indexOf(key) < 0).forEach(key => {
-				Object.defineProperty(Intermediate, key, Object.getOwnPropertyDescriptor(Super, key));
-			});
-
-			ownKeys(Super.prototype).forEach(key => {
-				Object.defineProperty(Intermediate.prototype, key, Object.getOwnPropertyDescriptor(Super.prototype, key));
-			});
-			Object.setPrototypeOf(this, Intermediate);
-			Object.setPrototypeOf(proto, Intermediate.prototype);
-			customElements.define(elementName, this, {extends: options.extends});
-		} else {
-			customElements.define(elementName, this);
-		}
+		customElements.define(elementName, this);
 	}
 }
 
@@ -191,20 +150,20 @@ export class ButtonElement extends ShadowElement {
 		}
 
 		if (value) {
-			this.setAttribute('disabled', '');
 			this.removeAttribute('tabindex');
+			this.setAttribute('disabled', '');
 		} else {
-			this.removeAttribute('disabled');
 			this.setAttribute('tabindex', 0);
+			this.removeAttribute('disabled');
 		}
 	}
 
 	constructor() {
 		super();
 
+		const clickKeys = new Set(['Enter', ' ']);
 		this.addEventListener('keypress', event => {
-			const code = event.charCode || event.keyCode;
-			if (code === 32 || code === 13) {
+			if (clickKeys.has(event.key)) {
 				this.click();
 			}
 		});
