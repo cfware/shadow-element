@@ -17,7 +17,7 @@ page('strings.html', async t => {
 
 	t.is(attr, 'new value');
 
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	checkText(ele, 'new value');
 
 	t.false(await selenium.executeScript(ele => {
@@ -27,7 +27,7 @@ page('strings.html', async t => {
 	}, ele));
 
 	t.is(await selenium.executeScript(ele => ele.stringProp, ele), 'String Prop');
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	checkText(ele, 'String Prop');
 
 	const prop = await selenium.executeScript(ele => {
@@ -37,7 +37,7 @@ page('strings.html', async t => {
 	}, ele);
 	t.is(prop, 'reset it');
 
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	checkText(ele, 'reset it');
 
 	t.false(await selenium.executeScript(ele => {
@@ -47,7 +47,7 @@ page('strings.html', async t => {
 	}, ele));
 
 	t.is(await selenium.executeScript(ele => ele.stringProp, ele), 'String Prop');
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	checkText(ele, 'String Prop');
 });
 
@@ -66,7 +66,7 @@ page('numbers.html', async t => {
 
 	t.is(attr, '50');
 
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	checkText(ele, '50');
 
 	t.false(await selenium.executeScript(ele => {
@@ -76,7 +76,7 @@ page('numbers.html', async t => {
 	}, ele));
 
 	t.is(await selenium.executeScript(ele => ele.numericProp, ele), 5);
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	checkText(ele, '5');
 
 	const prop = await selenium.executeScript(ele => {
@@ -86,7 +86,7 @@ page('numbers.html', async t => {
 	}, ele);
 	t.is(prop, 500);
 
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	checkText(ele, '500');
 
 	t.false(await selenium.executeScript(ele => {
@@ -96,7 +96,7 @@ page('numbers.html', async t => {
 	}, ele));
 
 	t.is(await selenium.executeScript(ele => ele.numericProp, ele), 5);
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	checkText(ele, '5');
 });
 
@@ -115,7 +115,7 @@ page('booleans.html', async t => {
 
 	t.true(attr);
 
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	checkText(ele, 'true');
 
 	t.false(await selenium.executeScript(ele => {
@@ -125,7 +125,7 @@ page('booleans.html', async t => {
 	}, ele));
 
 	t.false(await selenium.executeScript(ele => ele.booleanProp, ele));
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	checkText(ele, 'false');
 
 	t.true(await selenium.executeScript(ele => {
@@ -134,7 +134,7 @@ page('booleans.html', async t => {
 		return ele.booleanProp;
 	}, ele));
 
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	checkText(ele, 'true');
 
 	t.false(await selenium.executeScript(ele => {
@@ -144,7 +144,7 @@ page('booleans.html', async t => {
 	}, ele));
 
 	t.false(await selenium.executeScript(ele => ele.booleanProp, ele));
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	checkText(ele, 'false');
 });
 
@@ -205,7 +205,7 @@ page('button.html', async t => {
 	t.true(await isDisabled());
 	t.deepEqual(await getAttributes(), disabledAttrs);
 
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	t.is(await renderCount(), 2);
 
 	await selenium.executeScript(ele => {
@@ -218,7 +218,7 @@ page('button.html', async t => {
 	t.false(await isDisabled());
 	t.deepEqual(await getAttributes(), enabledAttrs);
 
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	t.is(await renderCount(), 3);
 
 	// Verify it doesn't touch the attributes.
@@ -226,7 +226,7 @@ page('button.html', async t => {
 		ele.disabled = false;
 	}, ele);
 
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	t.is(await renderCount(), 3);
 
 	const test2 = await selenium.findElement({id: 'test2'});
@@ -266,7 +266,7 @@ page('render-props.html', async t => {
 	}, ele);
 	t.is(await selenium.executeScript(ele => ele.prop1, ele), 'yes');
 
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	t.is(await selenium.executeScript(ele => ele.renderCount, ele), 2);
 
 	await selenium.executeScript(ele => {
@@ -274,7 +274,7 @@ page('render-props.html', async t => {
 	}, ele);
 	t.deepEqual(await selenium.executeScript(ele => ele.prop2, ele), [false]);
 
-	await selenium.sleep(15);
+	await selenium.sleep(50);
 	t.is(await selenium.executeScript(ele => ele.renderCount, ele), 3);
 });
 
