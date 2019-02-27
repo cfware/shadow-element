@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<script type="module">
+			import {ShadowElement} from '/shadow-element.js';
+
+			class NumericProp extends ShadowElement {
+				render() {
+					this.html`${this.numericProp}`;
+				}
+			}
+
+			NumericProp.define('numeric-prop', {
+				numericProps: {
+					numericProp: 5
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<numeric-prop id="test"></numeric-prop>
+	</body>
+</html>

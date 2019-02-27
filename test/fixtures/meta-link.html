@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<script type="module">
+			import {ShadowElement, metaLink} from '/shadow-element.js';
+
+			class MetaLink extends ShadowElement {
+				get href() {
+					return metaLink(this.url, this.metaURL);
+				}
+
+				render() {
+					this.html`${this.href}`;
+				}
+			}
+
+			MetaLink.define('meta-link', {
+				stringProps: {
+					metaURL: 'http://localhost/meta-link.html',
+					url: 'index.css'
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<meta-link id="test"></meta-link>
+	</body>
+</html>

@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<script type="module">
+			import {ShadowElement} from '/shadow-element.js';
+
+			class StringProp extends ShadowElement {
+				render() {
+					this.html`${this.stringProp}`;
+				}
+			}
+
+			StringProp.define('string-prop', {
+				stringProps: {
+					stringProp: 'String Prop'
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<string-prop id="test"></string-prop>
+	</body>
+</html>

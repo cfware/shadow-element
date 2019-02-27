@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<script type="module">
+			import {ShadowElement} from '/shadow-element.js';
+
+			class BooleanProp extends ShadowElement {
+				render() {
+					this.html`${this.booleanProp}`;
+				}
+
+				static get observedAttributes() {
+					return ['boolean-prop'];
+				}
+			}
+
+			BooleanProp.define('boolean-prop', {
+				booleanProps: ['booleanProp']
+			});
+		</script>
+	</head>
+	<body>
+		<boolean-prop id="test"></boolean-prop>
+	</body>
+</html>

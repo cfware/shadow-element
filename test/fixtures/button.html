@@ -1,0 +1,37 @@
+<html>
+	<head>
+		<script type="module">
+			import {ButtonElement} from '/shadow-element.js';
+
+			class MyButton extends ButtonElement {
+				constructor() {
+					super();
+					this.renderCount = 0;
+					this.clickCount = 0;
+					this.addEventListener('click', event => {
+						this.clickCount++;
+					});
+				}
+
+				render() {
+					this.renderCount++;
+					this.html`${this.renderCount}`;
+				}
+
+				static get observedAttributes() {
+					return ['disabled'];
+				}
+
+				get myProp() {
+					return 'my value';
+				}
+			}
+
+			MyButton.define('my-button');
+		</script>
+	</head>
+	<body>
+		<my-button id="test"></my-button>
+		<my-button id="test2" disabled></my-button>
+	</body>
+</html>
