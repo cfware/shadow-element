@@ -1,6 +1,6 @@
 {
 	"name": "@cfware/shadow-element",
-	"version": "0.3.4",
+	"version": "0.4.0",
 	"description": "My HyperHTML based shadow element",
 	"main": "shadow-element.js",
 	"scripts": {
