@@ -54,7 +54,7 @@ function reflectBooleanProps(proto, names, observedAttributes) {
 	});
 }
 
-function reflectStringProps(proto, items, observedAttributes) {
+function typedReflectionProp(proto, items, observedAttributes, attributeClass) {
 	Object.entries(items).forEach(([name, defaultValue]) => {
 		const attrName = decamelizePropName(name);
 
@@ -62,28 +62,7 @@ function reflectStringProps(proto, items, observedAttributes) {
 		Object.defineProperty(proto, name, {
 			enumerable: true,
 			get() {
-				return this.hasAttribute(attrName) ? this.getAttribute(attrName) : String(defaultValue);
-			},
-			set(value) {
-				if (value == null) { // eslint-disable-line eqeqeq
-					this.removeAttribute(attrName);
-				} else {
-					this.setAttribute(attrName, value);
-				}
-			}
-		});
-	});
-}
-
-function reflectNumericProps(proto, items, observedAttributes) {
-	Object.entries(items).forEach(([name, defaultValue]) => {
-		const attrName = decamelizePropName(name);
-
-		observedAttributes.add(attrName);
-		Object.defineProperty(proto, name, {
-			enumerable: true,
-			get() {
-				return this.hasAttribute(attrName) ? Number(this.getAttribute(attrName)) : defaultValue;
+				return attributeClass(this.hasAttribute(attrName) ? this.getAttribute(attrName) : defaultValue);
 			},
 			set(value) {
 				if (value == null) { // eslint-disable-line eqeqeq
@@ -134,8 +113,8 @@ export class ShadowElement extends HTMLElement {
 		const observedAttributes = new Set(this.observedAttributes);
 
 		wireRenderProps(proto, options.renderProps || {});
-		reflectStringProps(proto, options.stringProps || {}, observedAttributes);
-		reflectNumericProps(proto, options.numericProps || {}, observedAttributes);
+		typedReflectionProp(proto, options.stringProps || {}, observedAttributes, String);
+		typedReflectionProp(proto, options.numericProps || {}, observedAttributes, Number);
 		reflectBooleanProps(proto, options.booleanProps || [], observedAttributes);
 
 		if (observedAttributes.size > 0) {
