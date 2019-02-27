@@ -1,7 +1,7 @@
-import {wire, bind} from 'hyperhtml';
+import {html, render} from 'lighterhtml';
 import {Debouncer} from '@cfware/debouncer';
 
-export {wire, bind};
+export {html};
 
 function decamelizePropName(name) {
 	return name
@@ -26,7 +26,7 @@ function wireRenderProps(proto, props) {
 				},
 				set(value) {
 					this[privSymbol] = value;
-					this._render();
+					this.render();
 				}
 			}
 		});
@@ -98,24 +98,35 @@ function reflectNumericProps(proto, items, observedAttributes) {
 
 export const metaLink = (url, metaURL) => new URL(url, metaURL).toString();
 
+const symDebounce = Symbol('ShadowElement.debounce');
+
 export class ShadowElement extends HTMLElement {
-	constructor(mode = 'open', htmlFn = 'html') {
+	constructor(mode = 'open') {
 		super();
 
-		const debouncer = new Debouncer(() => this.render(), 10, 5);
-		this._render = () => debouncer.run();
-		Object.defineProperty(this, htmlFn, {
-			value: bind(this.attachShadow({mode}))
+		const shadowRoot = this.attachShadow({mode});
+		Object.defineProperty(this, symDebounce, {
+			value: new Debouncer(() => {
+				render(shadowRoot, () => this.template);
+			}, 10, 5)
 		});
 	}
 
+	render(now = false) {
+		this[symDebounce].run();
+
+		if (now) {
+			this[symDebounce].flush();
+		}
+	}
+
 	connectedCallback() {
-		// Don't debounce the initial render
-		this.render();
+		// Bypass debounce on initial render
+		this.render(true);
 	}
 
 	attributeChangedCallback() {
-		this._render();
+		this.render();
 	}
 
 	static define(elementName, options = {}) {

@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<script type="module">
-			import {ShadowElement} from '/shadow-element.js';
+			import {ShadowElement, html} from '/shadow-element.js';
 
 			class RenderProp extends ShadowElement {
 				constructor() {
@@ -9,9 +9,9 @@
 					this.renderCount = 0;
 				}
 
-				render() {
+				get template() {
 					this.renderCount++;
-					this.html`${this.renderCount}`;
+					return html`${this.renderCount}`;
 				}
 			}
 

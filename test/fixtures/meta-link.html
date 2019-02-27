@@ -1,15 +1,15 @@
 <html>
 	<head>
 		<script type="module">
-			import {ShadowElement, metaLink} from '/shadow-element.js';
+			import {ShadowElement, metaLink, html} from '/shadow-element.js';
 
 			class MetaLink extends ShadowElement {
 				get href() {
 					return metaLink(this.url, this.metaURL);
 				}
 
-				render() {
-					this.html`${this.href}`;
+				get template() {
+					return html`${this.href}`;
 				}
 			}
 

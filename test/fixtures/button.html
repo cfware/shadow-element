@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<script type="module">
-			import {ButtonElement} from '/shadow-element.js';
+			import {ButtonElement, html} from '/shadow-element.js';
 
 			class MyButton extends ButtonElement {
 				constructor() {
@@ -13,9 +13,9 @@
 					});
 				}
 
-				render() {
+				get template() {
 					this.renderCount++;
-					this.html`${this.renderCount}`;
+					return html`${this.renderCount}`;
 				}
 
 				static get observedAttributes() {

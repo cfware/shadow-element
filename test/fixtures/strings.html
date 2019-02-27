@@ -1,11 +1,11 @@
 <html>
 	<head>
 		<script type="module">
-			import {ShadowElement} from '/shadow-element.js';
+			import {ShadowElement, html} from '/shadow-element.js';
 
 			class StringProp extends ShadowElement {
-				render() {
-					this.html`${this.stringProp}`;
+				get template() {
+					return html`${this.stringProp}`;
 				}
 			}
 

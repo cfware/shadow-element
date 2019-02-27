@@ -6,20 +6,13 @@
 [![NPM Downloads][downloads-image]][downloads-url]
 [![MIT][license-image]](LICENSE)
 
-My HyperHTML based shadow element
+My lighterhtml based shadow element
 
 ### Install @cfware/shadow-element
 
 This is not a node module, though using it likely requires node.js 8 build
 system.  See [cfware/rollup-webapp] for a gulp@4 based build system template.
 
-This component is open source but semi-closed development.  It is not stable
-and is subject to change on the whim of my internal needs.  This may change in
-the future - or it might not.  If this fits your need you should be prepared to
-fork it.  You are probably better off using [hyperhtml-element].
-
-This module will follow semver but will remain on 0.x.  Every 0.x.0 release is
-subject to breaking changes.
 
 ```sh
 npm i -D @cfware/shadow-element
@@ -30,11 +23,11 @@ npm i -D @cfware/shadow-element
 ```js
 'use strict';
 
-import {ShadowElement} from '@cfware/shadow-element';
+import {ShadowElement, html} from '@cfware/shadow-element';
 
 class MyElement extends ShadowElement {
-	render() {
-		this.html`
+	get template() {
+		return html`
 			<style>
 				:host {
 					background: blue;
@@ -50,8 +43,8 @@ MyElement.define('my-element');
 
 ## Running tests
 
-Currently only `xo`.  Eventually testing here will expand to the browser but
-for now testing is indirect by consumers of this module.
+Testing is provided by `xo`, `ava` and `selenium-webdriver`.  Chrome and Firefox
+must be installed.
 
 ```sh
 npm install
