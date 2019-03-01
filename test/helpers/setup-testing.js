@@ -1,5 +1,5 @@
 import {setup, page} from '@cfware/ava-selenium-manager';
-import FastifyTestHelper from '@cfware/fastify-test-helper';
+import {FastifyTestHelper} from '@cfware/fastify-test-helper';
 import {Key} from 'selenium-webdriver/lib/input';
 
 page('strings.html', async t => {
