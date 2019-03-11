@@ -3,6 +3,8 @@ import {Debouncer} from '@cfware/debouncer';
 
 export {html};
 
+export const htmlFor = html.for;
+
 function decamelizePropName(name) {
 	return name
 		.replace(/([a-z\d])([A-Z])/gu, '$1-$2')
