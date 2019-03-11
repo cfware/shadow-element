@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.1](https://github.com/cfware/shadow-element/compare/v0.4.0...v0.4.1) (2019-03-11)
+
+
+### Features
+
+* Expose html.for as htmlFor. ([3a015da](https://github.com/cfware/shadow-element/commit/3a015da))
+
+
+
 # [0.4.0](https://github.com/cfware/shadow-element/compare/v0.3.4...v0.4.0) (2019-02-27)
 
 
