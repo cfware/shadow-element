@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.3](https://github.com/cfware/shadow-element/compare/v0.4.2...v0.4.3) (2019-03-12)
+
+
+### Bug Fixes
+
+* Improve ability to minify components. ([f6afe19](https://github.com/cfware/shadow-element/commit/f6afe19))
+
+
+
 ## [0.4.2](https://github.com/cfware/shadow-element/compare/v0.4.1...v0.4.2) (2019-03-12)
 
 
