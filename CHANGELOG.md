@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.2](https://github.com/cfware/shadow-element/compare/v0.4.1...v0.4.2) (2019-03-12)
+
+
+### Features
+
+* Add documentEvents & windowEvents to ShadowElement.define options. ([44ca59b](https://github.com/cfware/shadow-element/commit/44ca59b))
+
+
+
 ## [0.4.1](https://github.com/cfware/shadow-element/compare/v0.4.0...v0.4.1) (2019-03-11)
 
 
