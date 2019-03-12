@@ -80,16 +80,23 @@ function typedReflectionProp(proto, items, observedAttributes, attributeClass) {
 export const metaLink = (url, metaURL) => new URL(url, metaURL).toString();
 
 const symDebounce = Symbol('ShadowElement.debounce');
+const symLifetimeEvents = Symbol('ShadowElement.lifetimeEvents');
 
 export class ShadowElement extends HTMLElement {
 	constructor(mode = 'open') {
 		super();
 
 		const shadowRoot = this.attachShadow({mode});
-		Object.defineProperty(this, symDebounce, {
-			value: new Debouncer(() => {
-				render(shadowRoot, () => this.template);
-			}, 10, 5)
+		Object.defineProperties(this, {
+			[symDebounce]: {
+				value: new Debouncer(() => {
+					render(shadowRoot, () => this.template);
+				}, 10, 5)
+			},
+			[symLifetimeEvents]: {
+				value: [],
+				writable: true
+			}
 		});
 	}
 
@@ -102,8 +109,34 @@ export class ShadowElement extends HTMLElement {
 	}
 
 	connectedCallback() {
+		const saveEvent = (owner, type, fn) => {
+			if (typeof fn === 'string') {
+				const name = fn;
+				fn = (...args) => this[name](...args);
+			}
+
+			owner.addEventListener(type, fn);
+			this[symLifetimeEvents].push(() => owner.removeEventListener(type, fn));
+		};
+
+		const events = this.constructor[symLifetimeEvents];
+		Object.entries(events.document).forEach(([type, fn]) => {
+			saveEvent(document, type, fn);
+		});
+
+		Object.entries(events.window).forEach(([type, fn]) => {
+			saveEvent(window, type, fn);
+		});
+
 		// Bypass debounce on initial render
 		this.render(true);
+	}
+
+	disconnectedCallback() {
+		this[symLifetimeEvents].forEach(cleanup => {
+			cleanup();
+		});
+		this[symLifetimeEvents] = [];
 	}
 
 	attributeChangedCallback() {
@@ -118,6 +151,13 @@ export class ShadowElement extends HTMLElement {
 		typedReflectionProp(proto, options.stringProps || {}, observedAttributes, String);
 		typedReflectionProp(proto, options.numericProps || {}, observedAttributes, Number);
 		reflectBooleanProps(proto, options.booleanProps || [], observedAttributes);
+
+		Object.defineProperty(this, symLifetimeEvents, {
+			value: {
+				document: options.documentEvents || {},
+				window: options.windowEvents || {}
+			}
+		});
 
 		if (observedAttributes.size > 0) {
 			Object.defineProperty(this, 'observedAttributes', {

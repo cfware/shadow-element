@@ -1,0 +1,40 @@
+<html>
+	<head>
+		<script type="module">
+			import {ShadowElement, html} from '/shadow-element.js';
+
+			class EventSetup extends ShadowElement {
+				constructor() {
+					super();
+
+					this.windowClicks = 0;
+				}
+
+				get template() {
+					return html`nothing`;
+				}
+
+				_windowClick(event) {
+					document.windowClicks++;
+					this.windowClicks++;
+				}
+			}
+
+			document.windowClicks = 0;
+			document.documentClicks = 0;
+			EventSetup.define('event-setup', {
+				documentEvents: {
+					click: event => {
+						document.documentClicks++;
+					}
+				},
+				windowEvents: {
+					click: '_windowClick'
+				}
+			});
+		</script>
+	</head>
+	<body>
+		<event-setup id="test"></event-setup>
+	</body>
+</html>

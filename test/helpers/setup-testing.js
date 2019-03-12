@@ -1,3 +1,4 @@
+/* global document */
 import {setup, page} from '@cfware/ava-selenium-manager';
 import {FastifyTestHelper} from '@cfware/fastify-test-helper';
 import {Key} from 'selenium-webdriver/lib/input';
@@ -276,6 +277,32 @@ page('render-props.html', async t => {
 
 	await selenium.sleep(50);
 	t.is(await selenium.executeScript(ele => ele.renderCount, ele), 3);
+});
+
+page('events.html', async t => {
+	const {selenium} = t.context;
+	const ele = await selenium.findElement({id: 'test'});
+
+	t.is(await selenium.executeScript(ele => ele.windowClicks, ele), 0);
+	t.is(await selenium.executeScript(() => document.documentClicks), 0);
+
+	await ele.click();
+
+	t.is(await selenium.executeScript(ele => ele.windowClicks, ele), 1);
+	t.is(await selenium.executeScript(() => document.documentClicks), 1);
+
+	await selenium.executeScript(() => document.body.click());
+
+	t.is(await selenium.executeScript(ele => ele.windowClicks, ele), 2);
+	t.is(await selenium.executeScript(() => document.documentClicks), 2);
+
+	await selenium.executeScript(() => {
+		document.body.innerHTML = '';
+		document.body.click();
+	});
+
+	t.is(await selenium.executeScript(() => document.windowClicks), 2);
+	t.is(await selenium.executeScript(() => document.documentClicks), 2);
 });
 
 export function setupTesting(browserBuilder) {
