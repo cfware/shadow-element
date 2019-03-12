@@ -296,6 +296,10 @@ page('events.html', async t => {
 	t.is(await selenium.executeScript(ele => ele.windowClicks, ele), 2);
 	t.is(await selenium.executeScript(() => document.documentClicks), 2);
 
+	t.is(await selenium.executeScript(ele => ele.keyPresses, ele), 0);
+	await ele.sendKeys('a');
+	t.is(await selenium.executeScript(ele => ele.keyPresses, ele), 1);
+
 	await selenium.executeScript(() => {
 		document.body.innerHTML = '';
 		document.body.click();

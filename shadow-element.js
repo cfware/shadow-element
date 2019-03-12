@@ -79,8 +79,8 @@ function typedReflectionProp(proto, items, observedAttributes, attributeClass) {
 
 export const metaLink = (url, metaURL) => new URL(url, metaURL).toString();
 
-const symDebounce = Symbol('ShadowElement.debounce');
-const symLifetimeEvents = Symbol('ShadowElement.lifetimeEvents');
+const symDebounce = Symbol();
+const symLifetimeEvents = Symbol();
 
 export class ShadowElement extends HTMLElement {
 	constructor(mode = 'open') {
@@ -108,25 +108,23 @@ export class ShadowElement extends HTMLElement {
 		}
 	}
 
-	connectedCallback() {
-		const saveEvent = (owner, type, fn) => {
-			if (typeof fn === 'string') {
-				const name = fn;
-				fn = (...args) => this[name](...args);
+	initEvents(owner, events) {
+		Object.entries(events).forEach(([type, fn]) => {
+			if (['string', 'symbol'].includes(typeof fn)) {
+				const id = fn;
+				fn = (...args) => this[id](...args);
 			}
 
 			owner.addEventListener(type, fn);
 			this[symLifetimeEvents].push(() => owner.removeEventListener(type, fn));
-		};
-
-		const events = this.constructor[symLifetimeEvents];
-		Object.entries(events.document).forEach(([type, fn]) => {
-			saveEvent(document, type, fn);
 		});
+	}
 
-		Object.entries(events.window).forEach(([type, fn]) => {
-			saveEvent(window, type, fn);
-		});
+	connectedCallback() {
+		const {_document, _window} = this.constructor[symLifetimeEvents];
+
+		this.initEvents(document, _document);
+		this.initEvents(window, _window);
 
 		// Bypass debounce on initial render
 		this.render(true);
@@ -154,8 +152,8 @@ export class ShadowElement extends HTMLElement {
 
 		Object.defineProperty(this, symLifetimeEvents, {
 			value: {
-				document: options.documentEvents || {},
-				window: options.windowEvents || {}
+				_document: options.documentEvents || {},
+				_window: options.windowEvents || {}
 			}
 		});
 

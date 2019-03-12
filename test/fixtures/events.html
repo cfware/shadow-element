@@ -3,15 +3,21 @@
 		<script type="module">
 			import {ShadowElement, html} from '/shadow-element.js';
 
+			const symKeyPress = Symbol();
 			class EventSetup extends ShadowElement {
 				constructor() {
 					super();
 
+					this.keyPresses = 0;
 					this.windowClicks = 0;
 				}
 
 				get template() {
 					return html`nothing`;
+				}
+
+				[symKeyPress](event) {
+					this.keyPresses++;
 				}
 
 				_windowClick(event) {
@@ -29,12 +35,13 @@
 					}
 				},
 				windowEvents: {
+					keypress: symKeyPress,
 					click: '_windowClick'
 				}
 			});
 		</script>
 	</head>
 	<body>
-		<event-setup id="test"></event-setup>
+		<event-setup id="test" tabindex="0"></event-setup>
 	</body>
 </html>
