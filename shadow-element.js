@@ -12,17 +12,21 @@ function decamelizePropName(name) {
 		.toLowerCase();
 }
 
+const {defineProperties, entries} = Object;
+const enumerable = true;
+const writableProp = value => ({
+	writable: true,
+	value
+});
+
 function wireRenderProps(proto, props) {
-	Object.entries(props).forEach(([name, value]) => {
+	entries(props).forEach(([name, value]) => {
 		const privSymbol = Symbol(name);
 
-		Object.defineProperties(proto, {
-			[privSymbol]: {
-				value,
-				writable: true
-			},
+		defineProperties(proto, {
+			[privSymbol]: writableProp(value),
 			[name]: {
-				enumerable: true,
+				enumerable,
 				get() {
 					return this[privSymbol];
 				},
@@ -40,16 +44,18 @@ function reflectBooleanProps(proto, names, observedAttributes) {
 		const attrName = decamelizePropName(name);
 
 		observedAttributes.add(attrName);
-		Object.defineProperty(proto, name, {
-			enumerable: true,
-			get() {
-				return this.hasAttribute(attrName);
-			},
-			set(value) {
-				if (value) {
-					this.setAttribute(attrName, '');
-				} else {
-					this.removeAttribute(attrName);
+		defineProperties(proto, {
+			[name]: {
+				enumerable,
+				get() {
+					return this.hasAttribute(attrName);
+				},
+				set(value) {
+					if (value) {
+						this.setAttribute(attrName, '');
+					} else {
+						this.removeAttribute(attrName);
+					}
 				}
 			}
 		});
@@ -57,20 +63,22 @@ function reflectBooleanProps(proto, names, observedAttributes) {
 }
 
 function typedReflectionProp(proto, items, observedAttributes, attributeClass) {
-	Object.entries(items).forEach(([name, defaultValue]) => {
+	entries(items).forEach(([name, defaultValue]) => {
 		const attrName = decamelizePropName(name);
 
 		observedAttributes.add(attrName);
-		Object.defineProperty(proto, name, {
-			enumerable: true,
-			get() {
-				return attributeClass(this.hasAttribute(attrName) ? this.getAttribute(attrName) : defaultValue);
-			},
-			set(value) {
-				if (value == null) { // eslint-disable-line eqeqeq
-					this.removeAttribute(attrName);
-				} else {
-					this.setAttribute(attrName, value);
+		defineProperties(proto, {
+			[name]: {
+				enumerable,
+				get() {
+					return attributeClass(this.hasAttribute(attrName) ? this.getAttribute(attrName) : defaultValue);
+				},
+				set(value) {
+					if (value == null) { // eslint-disable-line eqeqeq
+						this.removeAttribute(attrName);
+					} else {
+						this.setAttribute(attrName, value);
+					}
 				}
 			}
 		});
@@ -87,29 +95,22 @@ export class ShadowElement extends HTMLElement {
 		super();
 
 		const shadowRoot = this.attachShadow({mode});
-		Object.defineProperties(this, {
+		defineProperties(this, {
 			[symDebounce]: {
 				value: new Debouncer(() => {
 					render(shadowRoot, () => this.template);
 				}, 10, 5)
 			},
-			[symLifetimeEvents]: {
-				value: [],
-				writable: true
-			}
+			[symLifetimeEvents]: writableProp([])
 		});
 	}
 
-	render(now = false) {
-		this[symDebounce].run();
-
-		if (now) {
-			this[symDebounce].flush();
-		}
+	render(immediately) {
+		this[symDebounce].run(immediately);
 	}
 
 	createBoundEventListeners(owner, events) {
-		return Object.entries(events).map(([type, fn]) => {
+		return entries(events).map(([type, fn]) => {
 			if (['string', 'symbol'].includes(typeof fn)) {
 				const id = fn;
 				fn = (...args) => this[id](...args);
@@ -154,20 +155,24 @@ export class ShadowElement extends HTMLElement {
 		typedReflectionProp(proto, options.numericProps || {}, observedAttributes, Number);
 		reflectBooleanProps(proto, options.booleanProps || [], observedAttributes);
 
-		Object.defineProperty(this, symLifetimeEvents, {
-			value: {
-				_document: options.documentEvents || {},
-				_window: options.windowEvents || {}
+		const props = {
+			[symLifetimeEvents]: {
+				value: {
+					_document: options.documentEvents || {},
+					_window: options.windowEvents || {}
+				}
 			}
-		});
+		};
 
 		if (observedAttributes.size > 0) {
-			Object.defineProperty(this, 'observedAttributes', {
+			props.observedAttributes = {
 				get() {
 					return observedAttributes;
 				}
-			});
+			};
 		}
+
+		defineProperties(this, props);
 
 		customElements.define(elementName, this);
 	}
