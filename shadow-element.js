@@ -108,16 +108,20 @@ export class ShadowElement extends HTMLElement {
 		}
 	}
 
-	initEvents(owner, events) {
-		Object.entries(events).forEach(([type, fn]) => {
+	createBoundEventListeners(owner, events) {
+		return Object.entries(events).map(([type, fn]) => {
 			if (['string', 'symbol'].includes(typeof fn)) {
 				const id = fn;
 				fn = (...args) => this[id](...args);
 			}
 
 			owner.addEventListener(type, fn);
-			this[symLifetimeEvents].push(() => owner.removeEventListener(type, fn));
+			return () => owner.removeEventListener(type, fn);
 		});
+	}
+
+	initEvents(owner, events) {
+		this[symLifetimeEvents].push(...this.createBoundEventListeners(owner, events));
 	}
 
 	connectedCallback() {
