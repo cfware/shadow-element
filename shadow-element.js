@@ -1,5 +1,5 @@
 import {html, render} from 'lighterhtml';
-import {Debouncer} from '@cfware/debouncer';
+import Debouncer from '@cfware/debouncer';
 
 export {html};
 
