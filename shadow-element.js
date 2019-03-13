@@ -12,21 +12,17 @@ function decamelizePropName(name) {
 		.toLowerCase();
 }
 
-const {defineProperties, entries} = Object;
-const enumerable = true;
-const writableProp = value => ({
-	writable: true,
-	value
-});
-
 function wireRenderProps(proto, props) {
-	entries(props).forEach(([name, value]) => {
+	Object.entries(props).forEach(([name, value]) => {
 		const privSymbol = Symbol(name);
 
-		defineProperties(proto, {
-			[privSymbol]: writableProp(value),
+		Object.defineProperties(proto, {
+			[privSymbol]: {
+				writable: true,
+				value
+			},
 			[name]: {
-				enumerable,
+				enumerable: true,
 				get() {
 					return this[privSymbol];
 				},
@@ -44,9 +40,9 @@ function reflectBooleanProps(proto, names, observedAttributes) {
 		const attrName = decamelizePropName(name);
 
 		observedAttributes.add(attrName);
-		defineProperties(proto, {
+		Object.defineProperties(proto, {
 			[name]: {
-				enumerable,
+				enumerable: true,
 				get() {
 					return this.hasAttribute(attrName);
 				},
@@ -63,13 +59,13 @@ function reflectBooleanProps(proto, names, observedAttributes) {
 }
 
 function typedReflectionProp(proto, items, observedAttributes, attributeClass) {
-	entries(items).forEach(([name, defaultValue]) => {
+	Object.entries(items).forEach(([name, defaultValue]) => {
 		const attrName = decamelizePropName(name);
 
 		observedAttributes.add(attrName);
-		defineProperties(proto, {
+		Object.defineProperties(proto, {
 			[name]: {
-				enumerable,
+				enumerable: true,
 				get() {
 					return attributeClass(this.hasAttribute(attrName) ? this.getAttribute(attrName) : defaultValue);
 				},
@@ -95,13 +91,16 @@ export class ShadowElement extends HTMLElement {
 		super();
 
 		const shadowRoot = this.attachShadow({mode});
-		defineProperties(this, {
+		Object.defineProperties(this, {
 			[symDebounce]: {
 				value: new Debouncer(() => {
 					render(shadowRoot, () => this.template);
 				}, 10, 5)
 			},
-			[symLifetimeEvents]: writableProp([])
+			[symLifetimeEvents]: {
+				writable: true,
+				value: []
+			}
 		});
 	}
 
@@ -110,7 +109,7 @@ export class ShadowElement extends HTMLElement {
 	}
 
 	createBoundEventListeners(owner, events) {
-		return entries(events).map(([type, fn]) => {
+		return Object.entries(events).map(([type, fn]) => {
 			if (['string', 'symbol'].includes(typeof fn)) {
 				const id = fn;
 				fn = (...args) => this[id](...args);
@@ -172,7 +171,7 @@ export class ShadowElement extends HTMLElement {
 			};
 		}
 
-		defineProperties(this, props);
+		Object.defineProperties(this, props);
 
 		customElements.define(elementName, this);
 	}
