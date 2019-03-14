@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.5](https://github.com/cfware/shadow-element/compare/v0.4.4...v0.4.5) (2019-03-14)
+
+
+### Bug Fixes
+
+* Revert some of the 'terser friendly' changes. ([6f6a011](https://github.com/cfware/shadow-element/commit/6f6a011))
+
+
+
 ## [0.4.4](https://github.com/cfware/shadow-element/compare/v0.4.3...v0.4.4) (2019-03-13)
 
 
