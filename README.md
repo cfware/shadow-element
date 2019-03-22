@@ -21,8 +21,6 @@ npm i -D @cfware/shadow-element
 ## Usage
 
 ```js
-'use strict';
-
 import {ShadowElement, html} from '@cfware/shadow-element';
 
 class MyElement extends ShadowElement {
