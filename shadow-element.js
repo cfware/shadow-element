@@ -1,5 +1,6 @@
 import {html, render} from 'lighterhtml';
 import Debouncer from '@cfware/debouncer';
+import runCallbacks from '@cfware/callback-array-once';
 
 export {html};
 
@@ -83,29 +84,18 @@ function typedReflectionProp(proto, items, observedAttributes, attributeClass) {
 
 export const metaLink = (url, metaURL) => new URL(url, metaURL).toString();
 
-const symDebounce = Symbol();
-const symLifetimeEvents = Symbol();
-
 export class ShadowElement extends HTMLElement {
+	_lifetimeCleanups = [];
+	_debounce = new Debouncer(() => render(this._shadowRoot, () => this.template), 10, 5);
+
 	constructor(mode = 'open') {
 		super();
 
-		const shadowRoot = this.attachShadow({mode});
-		Object.defineProperties(this, {
-			[symDebounce]: {
-				value: new Debouncer(() => {
-					render(shadowRoot, () => this.template);
-				}, 10, 5)
-			},
-			[symLifetimeEvents]: {
-				writable: true,
-				value: []
-			}
-		});
+		this._shadowRoot = this.attachShadow({mode});
 	}
 
 	render(immediately) {
-		this[symDebounce].run(immediately);
+		this._debounce.run(immediately);
 	}
 
 	createBoundEventListeners(owner, events) {
@@ -121,11 +111,11 @@ export class ShadowElement extends HTMLElement {
 	}
 
 	initEvents(owner, events) {
-		this[symLifetimeEvents].push(...this.createBoundEventListeners(owner, events));
+		this._lifetimeCleanups.push(...this.createBoundEventListeners(owner, events));
 	}
 
 	connectedCallback() {
-		const {_document, _window} = this.constructor[symLifetimeEvents];
+		const {_document, _window} = this.constructor._lifetimeCleanups;
 
 		this.initEvents(document, _document);
 		this.initEvents(window, _window);
@@ -135,10 +125,7 @@ export class ShadowElement extends HTMLElement {
 	}
 
 	disconnectedCallback() {
-		this[symLifetimeEvents].forEach(cleanup => {
-			cleanup();
-		});
-		this[symLifetimeEvents] = [];
+		runCallbacks(this._lifetimeCleanups);
 	}
 
 	attributeChangedCallback() {
@@ -155,7 +142,7 @@ export class ShadowElement extends HTMLElement {
 		reflectBooleanProps(proto, options.booleanProps || [], observedAttributes);
 
 		const props = {
-			[symLifetimeEvents]: {
+			_lifetimeCleanups: {
 				value: {
 					_document: options.documentEvents || {},
 					_window: options.windowEvents || {}
