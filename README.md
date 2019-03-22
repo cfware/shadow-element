@@ -13,6 +13,7 @@ My lighterhtml based shadow element
 This is not a node module, though using it likely requires node.js 8 build
 system.  See [cfware/rollup-webapp] for a gulp@4 based build system template.
 
+This module makes use of [public class fields].
 
 ```sh
 npm i -D @cfware/shadow-element
@@ -60,3 +61,4 @@ npm test
 
 [cfware/rollup-webapp]: https://github.com/cfware/rollup-webapp
 [hyperhtml-element]: https://github.com/WebReflection/hyperHTML-Element#readme
+[public class fields]: https://github.com/tc39/proposal-class-fields#readme
