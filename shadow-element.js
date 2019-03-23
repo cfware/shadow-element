@@ -1,6 +1,7 @@
 import {html, render} from 'lighterhtml';
 import Debouncer from '@cfware/debouncer';
 import runCallbacks from '@cfware/callback-array-once';
+import addEventListener from '@cfware/add-event-listener';
 
 export {html};
 
@@ -105,8 +106,7 @@ export class ShadowElement extends HTMLElement {
 				fn = (...args) => this[id](...args);
 			}
 
-			owner.addEventListener(type, fn);
-			return () => owner.removeEventListener(type, fn);
+			return addEventListener(owner, type, fn);
 		});
 	}
 

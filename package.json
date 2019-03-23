@@ -25,6 +25,7 @@
 	},
 	"homepage": "https://github.com/cfware/shadow-element#readme",
 	"dependencies": {
+		"@cfware/add-event-listener": "^0.1.0",
 		"@cfware/callback-array-once": "^1.0.0",
 		"@cfware/debouncer": "^0.3.0",
 		"lighterhtml": "^0.9.2"
