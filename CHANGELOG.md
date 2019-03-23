@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.1](https://github.com/cfware/shadow-element/compare/v0.5.0...v0.5.1) (2019-03-23)
+
+
+### Bug Fixes
+
+* Use @cfware/add-event-listener ([e464494](https://github.com/cfware/shadow-element/commit/e464494))
+
+
+
 # [0.5.0](https://github.com/cfware/shadow-element/compare/v0.4.5...v0.5.0) (2019-03-22)
 
 
