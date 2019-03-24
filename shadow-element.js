@@ -3,7 +3,7 @@ import Debouncer from '@cfware/debouncer';
 import runCallbacks from '@cfware/callback-array-once';
 import addEventListener from '@cfware/add-event-listener';
 
-export {html};
+export {html, render};
 
 export const htmlFor = html.for;
 
