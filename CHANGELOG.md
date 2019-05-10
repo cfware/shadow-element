@@ -1,6 +1,20 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [0.6.0](https://github.com/cfware/shadow-element/compare/v0.5.4...v0.6.0) (2019-05-10)
+
+
+### Bug Fixes
+
+* update lighterhtml to version 0.11.0 ([#12](https://github.com/cfware/shadow-element/issues/12)) ([5ccbccf](https://github.com/cfware/shadow-element/commit/5ccbccf))
+
+
+### BREAKING CHANGES
+
+* update lighterhtml to version 0.11.0 (#12)
+
+
 
 ## [0.5.4](https://github.com/cfware/shadow-element/compare/v0.5.3...v0.5.4) (2019-04-27)
 
