@@ -96,7 +96,8 @@ export class ShadowElement extends HTMLElement {
 	}
 
 	render(immediately) {
-		this._debounce.run(immediately);
+		// Prevent `event` first argument from being treated as truthy
+		this._debounce.run(immediately === true);
 	}
 
 	createBoundEventListeners(owner, events) {
