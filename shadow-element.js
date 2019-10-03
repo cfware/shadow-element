@@ -87,12 +87,16 @@ export const metaLink = (url, metaURL) => new URL(url, metaURL).toString();
 
 export class ShadowElement extends HTMLElement {
 	_lifetimeCleanups = [];
-	_debounce = new Debouncer(() => render(this._shadowRoot, () => this.template), 10, 5);
+	_debounce = new Debouncer(() => this.renderCallback(), 10, 5);
 
 	constructor(mode = 'open') {
 		super();
 
 		this._shadowRoot = this.attachShadow({mode});
+	}
+
+	renderCallback() {
+		render(this._shadowRoot, () => this.template);
 	}
 
 	render(immediately) {
