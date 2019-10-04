@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.1](https://github.com/cfware/shadow-element/compare/v0.10.0...v0.10.1) (2019-10-04)
+
+
+### Bug Fixes
+
+* this.render requires `true` instead of truthy argument. ([a7ccf9d](https://github.com/cfware/shadow-element/commit/a7ccf9d))
+
+
+### Features
+
+* Create renderCallback function ([f70dcfa](https://github.com/cfware/shadow-element/commit/f70dcfa))
+
 ## [0.10.0](https://github.com/cfware/shadow-element/compare/v0.9.0...v0.10.0) (2019-08-26)
 
 
