@@ -25,7 +25,7 @@
 		"@cfware/add-event-listener": "^0.1.1",
 		"@cfware/callback-array-once": "^1.0.1",
 		"@cfware/debouncer": "^0.3.2",
-		"lighterhtml": "^1.0.2"
+		"lighterhtml": "^2.0.0"
 	},
 	"devDependencies": {
 		"@cfware/ava-selenium-manager": "^0.2.2",
