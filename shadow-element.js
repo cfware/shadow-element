@@ -1,3 +1,5 @@
+/* eslint-env browser */
+/* eslint prefer-named-capture-group: 0 */
 import {html, render} from 'lighterhtml';
 import Debouncer from '@cfware/debouncer';
 import runCallbacks from '@cfware/callback-array-once';
@@ -7,15 +9,15 @@ export {html, render};
 
 export const htmlFor = html.for;
 
-function decamelizePropName(name) {
+function decamelizePropertyName(name) {
 	return name
 		.replace(/([a-z\d])([A-Z])/gu, '$1-$2')
 		.replace(/([a-z]+)([A-Z][a-z\d]+)/gu, '$1-$2')
 		.toLowerCase();
 }
 
-function wireRenderProps(proto, props) {
-	Object.entries(props).forEach(([name, value]) => {
+function wireRenderProperties(proto, properties) {
+	for (const [name, value] of Object.entries(properties)) {
 		const privSymbol = Symbol(name);
 
 		Object.defineProperties(proto, {
@@ -34,53 +36,53 @@ function wireRenderProps(proto, props) {
 				}
 			}
 		});
-	});
+	}
 }
 
-function reflectBooleanProps(proto, names, observedAttributes) {
-	names.forEach(name => {
-		const attrName = decamelizePropName(name);
+function reflectBooleanProperties(proto, names, observedAttributes) {
+	for (const name of names) {
+		const attributeName = decamelizePropertyName(name);
 
-		observedAttributes.add(attrName);
+		observedAttributes.add(attributeName);
 		Object.defineProperties(proto, {
 			[name]: {
 				enumerable: true,
 				get() {
-					return this.hasAttribute(attrName);
+					return this.hasAttribute(attributeName);
 				},
 				set(value) {
 					if (value) {
-						this.setAttribute(attrName, '');
+						this.setAttribute(attributeName, '');
 					} else {
-						this.removeAttribute(attrName);
+						this.removeAttribute(attributeName);
 					}
 				}
 			}
 		});
-	});
+	}
 }
 
-function typedReflectionProp(proto, items, observedAttributes, attributeClass) {
-	Object.entries(items).forEach(([name, defaultValue]) => {
-		const attrName = decamelizePropName(name);
+function typedReflectionProperties(proto, items, observedAttributes, attributeClass) {
+	for (const [name, defaultValue] of Object.entries(items)) {
+		const attributeName = decamelizePropertyName(name);
 
-		observedAttributes.add(attrName);
+		observedAttributes.add(attributeName);
 		Object.defineProperties(proto, {
 			[name]: {
 				enumerable: true,
 				get() {
-					return attributeClass(this.hasAttribute(attrName) ? this.getAttribute(attrName) : defaultValue);
+					return attributeClass(this.hasAttribute(attributeName) ? this.getAttribute(attributeName) : defaultValue);
 				},
 				set(value) {
 					if (value == null) { // eslint-disable-line eqeqeq
-						this.removeAttribute(attrName);
+						this.removeAttribute(attributeName);
 					} else {
-						this.setAttribute(attrName, value);
+						this.setAttribute(attributeName, value);
 					}
 				}
 			}
 		});
-	});
+	}
 }
 
 export const metaLink = (url, metaURL) => new URL(url, metaURL).toString();
@@ -141,12 +143,12 @@ export class ShadowElement extends HTMLElement {
 		const proto = this.prototype;
 		const observedAttributes = new Set(this.observedAttributes);
 
-		wireRenderProps(proto, options.renderProps || {});
-		typedReflectionProp(proto, options.stringProps || {}, observedAttributes, String);
-		typedReflectionProp(proto, options.numericProps || {}, observedAttributes, Number);
-		reflectBooleanProps(proto, options.booleanProps || [], observedAttributes);
+		wireRenderProperties(proto, options.renderProps || {});
+		typedReflectionProperties(proto, options.stringProps || {}, observedAttributes, String);
+		typedReflectionProperties(proto, options.numericProps || {}, observedAttributes, Number);
+		reflectBooleanProperties(proto, options.booleanProps || [], observedAttributes);
 
-		const props = {
+		const properties = {
 			_lifetimeCleanups: {
 				value: {
 					_document: options.documentEvents || {},
@@ -156,14 +158,14 @@ export class ShadowElement extends HTMLElement {
 		};
 
 		if (observedAttributes.size > 0) {
-			props.observedAttributes = {
+			properties.observedAttributes = {
 				get() {
 					return observedAttributes;
 				}
 			};
 		}
 
-		Object.defineProperties(this, props);
+		Object.defineProperties(this, properties);
 
 		customElements.define(elementName, this);
 	}

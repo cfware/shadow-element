@@ -1,8 +1,8 @@
 /* global document */
 import {setup, page} from '@cfware/ava-selenium-manager';
 import {FastifyTestHelper} from '@cfware/fastify-test-helper';
-import {Key} from 'selenium-webdriver/lib/input';
-import fastifyTestHelperConfig from './_fastify-test-helper.config';
+import {Key} from 'selenium-webdriver/lib/input.js';
+import fastifyTestHelperConfig from './_fastify-test-helper.config.js';
 
 page('strings.html', async t => {
 	const {selenium, checkText} = t.context;
@@ -11,13 +11,13 @@ page('strings.html', async t => {
 	t.is(await selenium.executeScript(ele => ele.stringProp, ele), 'String Prop');
 	checkText(ele, 'String Prop');
 
-	const attr = await selenium.executeScript(ele => {
+	const attribute = await selenium.executeScript(ele => {
 		ele.stringProp = 'new value';
 
 		return ele.getAttribute('string-prop');
 	}, ele);
 
-	t.is(attr, 'new value');
+	t.is(attribute, 'new value');
 
 	await selenium.sleep(100);
 	checkText(ele, 'new value');
@@ -32,12 +32,12 @@ page('strings.html', async t => {
 	await selenium.sleep(100);
 	checkText(ele, 'String Prop');
 
-	const prop = await selenium.executeScript(ele => {
+	const property = await selenium.executeScript(ele => {
 		ele.setAttribute('string-prop', 'reset it');
 
 		return ele.stringProp;
 	}, ele);
-	t.is(prop, 'reset it');
+	t.is(property, 'reset it');
 
 	await selenium.sleep(100);
 	checkText(ele, 'reset it');
@@ -60,13 +60,13 @@ page('numbers.html', async t => {
 	t.is(await selenium.executeScript(ele => ele.numericProp, ele), 5);
 	checkText(ele, '5');
 
-	const attr = await selenium.executeScript(ele => {
+	const attribute = await selenium.executeScript(ele => {
 		ele.numericProp = 50;
 
 		return ele.getAttribute('numeric-prop');
 	}, ele);
 
-	t.is(attr, '50');
+	t.is(attribute, '50');
 
 	await selenium.sleep(100);
 	checkText(ele, '50');
@@ -81,12 +81,12 @@ page('numbers.html', async t => {
 	await selenium.sleep(100);
 	checkText(ele, '5');
 
-	const prop = await selenium.executeScript(ele => {
+	const property = await selenium.executeScript(ele => {
 		ele.setAttribute('numeric-prop', '500');
 
 		return ele.numericProp;
 	}, ele);
-	t.is(prop, 500);
+	t.is(property, 500);
 
 	await selenium.sleep(100);
 	checkText(ele, '500');
@@ -109,13 +109,13 @@ page('booleans.html', async t => {
 	t.false(await selenium.executeScript(ele => ele.booleanProp, ele));
 	checkText(ele, 'false');
 
-	const attr = await selenium.executeScript(ele => {
+	const attribute = await selenium.executeScript(ele => {
 		ele.booleanProp = true;
 
 		return ele.hasAttribute('boolean-prop');
 	}, ele);
 
-	t.true(attr);
+	t.true(attribute);
 
 	await selenium.sleep(100);
 	checkText(ele, 'true');
@@ -153,12 +153,12 @@ page('booleans.html', async t => {
 page('button.html', async t => {
 	const {selenium} = t.context;
 	const ele = await selenium.findElement({id: 'test'});
-	const disabledAttrs = {
+	const disabledAttributes = {
 		disabled: true,
 		tabindex: null,
 		role: 'button'
 	};
-	const enabledAttrs = {
+	const enabledAttributes = {
 		disabled: false,
 		tabindex: '0',
 		role: 'button'
@@ -166,20 +166,20 @@ page('button.html', async t => {
 	const renderCount = () => selenium.executeScript(ele => ele.renderCount, ele);
 	const clickCount = () => selenium.executeScript(ele => ele.clickCount, ele);
 	const isDisabled = () => selenium.executeScript(ele => ele.disabled, ele);
-	const getAttributes = (elem = ele) => selenium.executeScript(ele => {
+	const getAttributes = (element = ele) => selenium.executeScript(ele => {
 		return {
 			disabled: ele.hasAttribute('disabled'),
 			tabindex: ele.hasAttribute('tabindex') ? ele.getAttribute('tabindex') : null,
 			role: ele.getAttribute('role')
 		};
-	}, elem);
+	}, element);
 
 	t.is(await selenium.executeScript(ele => ele.myProp, ele), 'my value');
 	t.is(await renderCount(), 1);
 	t.is(await clickCount(), 0);
 
 	t.false(await isDisabled());
-	t.deepEqual(await getAttributes(), enabledAttrs);
+	t.deepEqual(await getAttributes(), enabledAttributes);
 
 	await ele.click();
 	t.is(await clickCount(), 1);
@@ -194,7 +194,11 @@ page('button.html', async t => {
 	t.is(await clickCount(), 4);
 
 	const alpha = 'abcdefghijklmnopqrstuvwxyz';
-	await ele.sendKeys(alpha + alpha.toUpperCase() + '0123456789`~!@#$%^&*()_+-=[]{}\\|;:\'",./<>?');
+	await ele.sendKeys([
+		alpha,
+		alpha.toUpperCase(),
+		'0123456789`~!@#$%^&*()_+-=[]{}\\|;:\'",./<>?'
+	].join(''));
 	t.is(await clickCount(), 4);
 
 	await selenium.executeScript(ele => {
@@ -205,7 +209,7 @@ page('button.html', async t => {
 	t.is(await clickCount(), 4);
 
 	t.true(await isDisabled());
-	t.deepEqual(await getAttributes(), disabledAttrs);
+	t.deepEqual(await getAttributes(), disabledAttributes);
 
 	await selenium.sleep(100);
 	t.is(await renderCount(), 2);
@@ -218,7 +222,7 @@ page('button.html', async t => {
 	t.is(await clickCount(), 5);
 
 	t.false(await isDisabled());
-	t.deepEqual(await getAttributes(), enabledAttrs);
+	t.deepEqual(await getAttributes(), enabledAttributes);
 
 	await selenium.sleep(100);
 	t.is(await renderCount(), 3);
@@ -232,7 +236,7 @@ page('button.html', async t => {
 	t.is(await renderCount(), 3);
 
 	const test2 = await selenium.findElement({id: 'test2'});
-	t.deepEqual(await getAttributes(test2), disabledAttrs);
+	t.deepEqual(await getAttributes(test2), disabledAttributes);
 });
 
 page('meta-link.html', async t => {
