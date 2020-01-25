@@ -8,6 +8,7 @@ import addEventListener from '@cfware/add-event-listener';
 export {html, render};
 
 export const htmlFor = html.for;
+export const htmlNode = html.node;
 
 function decamelizePropertyName(name) {
 	return name
