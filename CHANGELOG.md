@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.3](https://github.com/cfware/shadow-element/compare/v0.10.2...v0.10.3) (2020-01-25)
+
+
+### Features
+
+* Export htmlNode ([ee751fe](https://github.com/cfware/shadow-element/commit/ee751fe0839f68b05973f94aead639eb7b88fa32))
+
 ### [0.10.2](https://github.com/cfware/shadow-element/compare/v0.10.1...v0.10.2) (2020-01-01)
 
 
