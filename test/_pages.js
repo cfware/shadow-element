@@ -1,7 +1,5 @@
-/* global document */
 import {setup, page} from '@cfware/ava-selenium-manager';
 import {FastifyTestHelper} from '@cfware/fastify-test-helper';
-import {Key} from 'selenium-webdriver/lib/input.js';
 import fastifyTestHelperConfig from './_fastify-test-helper.config.js';
 
 page('strings.html', async t => {
@@ -148,95 +146,6 @@ page('booleans.html', async t => {
 	t.false(await selenium.executeScript(ele => ele.booleanProp, ele));
 	await selenium.sleep(100);
 	checkText(ele, 'false');
-});
-
-page('button.html', async t => {
-	const {selenium} = t.context;
-	const ele = await selenium.findElement({id: 'test'});
-	const disabledAttributes = {
-		disabled: true,
-		tabindex: null,
-		role: 'button'
-	};
-	const enabledAttributes = {
-		disabled: false,
-		tabindex: '0',
-		role: 'button'
-	};
-	const renderCount = () => selenium.executeScript(ele => ele.renderCount, ele);
-	const clickCount = () => selenium.executeScript(ele => ele.clickCount, ele);
-	const isDisabled = () => selenium.executeScript(ele => ele.disabled, ele);
-	const getAttributes = (element = ele) => selenium.executeScript(ele => {
-		return {
-			disabled: ele.hasAttribute('disabled'),
-			tabindex: ele.hasAttribute('tabindex') ? ele.getAttribute('tabindex') : null,
-			role: ele.getAttribute('role')
-		};
-	}, element);
-
-	t.is(await selenium.executeScript(ele => ele.myProp, ele), 'my value');
-	t.is(await renderCount(), 1);
-	t.is(await clickCount(), 0);
-
-	t.false(await isDisabled());
-	t.deepEqual(await getAttributes(), enabledAttributes);
-
-	await ele.click();
-	t.is(await clickCount(), 1);
-
-	await ele.sendKeys(Key.ENTER);
-	t.is(await clickCount(), 2);
-
-	await ele.sendKeys(Key.RETURN);
-	t.is(await clickCount(), 3);
-
-	await ele.sendKeys(' ');
-	t.is(await clickCount(), 4);
-
-	const alpha = 'abcdefghijklmnopqrstuvwxyz';
-	await ele.sendKeys([
-		alpha,
-		alpha.toUpperCase(),
-		'0123456789`~!@#$%^&*()_+-=[]{}\\|;:\'",./<>?'
-	].join(''));
-	t.is(await clickCount(), 4);
-
-	await selenium.executeScript(ele => {
-		ele.disabled = true;
-	}, ele);
-
-	await ele.click();
-	t.is(await clickCount(), 4);
-
-	t.true(await isDisabled());
-	t.deepEqual(await getAttributes(), disabledAttributes);
-
-	await selenium.sleep(100);
-	t.is(await renderCount(), 2);
-
-	await selenium.executeScript(ele => {
-		ele.disabled = false;
-	}, ele);
-
-	await ele.click();
-	t.is(await clickCount(), 5);
-
-	t.false(await isDisabled());
-	t.deepEqual(await getAttributes(), enabledAttributes);
-
-	await selenium.sleep(100);
-	t.is(await renderCount(), 3);
-
-	// Verify it doesn't touch the attributes.
-	await selenium.executeScript(ele => {
-		ele.disabled = false;
-	}, ele);
-
-	await selenium.sleep(100);
-	t.is(await renderCount(), 3);
-
-	const test2 = await selenium.findElement({id: 'test2'});
-	t.deepEqual(await getAttributes(test2), disabledAttributes);
 });
 
 page('meta-link.html', async t => {

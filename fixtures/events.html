@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<script type="module">
-			import {ShadowElement, html} from '/shadow-element.js';
+			import {ShadowElement, html, template} from '/shadow-element.js';
 
 			const symKeyPress = Symbol();
 			class EventSetup extends ShadowElement {
@@ -12,7 +12,7 @@
 					this.windowClicks = 0;
 				}
 
-				get template() {
+				get [template]() {
 					return html`nothing`;
 				}
 
@@ -29,15 +29,17 @@
 			document.windowClicks = 0;
 			document.documentClicks = 0;
 			EventSetup.define('event-setup', {
-				documentEvents: {
-					click: event => {
-						document.documentClicks++;
-					}
-				},
-				windowEvents: {
-					keypress: symKeyPress,
-					click: '_windowClick'
-				}
+				lifecycleEvents: new Map([
+					[document, {
+						click: event => {
+							document.documentClicks++;
+						}
+					}],
+					[window, {
+						keypress: symKeyPress,
+						click: '_windowClick'
+					}]
+				])
 			});
 		</script>
 	</head>
