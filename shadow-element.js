@@ -50,11 +50,7 @@ function reflectBooleanProperties(proto, names, observedAttributes) {
 					return this.hasAttribute(attributeName);
 				},
 				set(value) {
-					if (value) {
-						this.setAttribute(attributeName, '');
-					} else {
-						this.removeAttribute(attributeName);
-					}
+					this.toggleAttribute(attributeName, Boolean(value));
 				}
 			}
 		});
