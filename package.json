@@ -1,6 +1,6 @@
 {
 	"name": "@cfware/shadow-element",
-	"version": "0.10.3",
+	"version": "0.11.0",
 	"description": "My lighterhtml based shadow element",
 	"main": "shadow-element.js",
 	"scripts": {
