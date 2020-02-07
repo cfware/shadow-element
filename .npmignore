@@ -5,4 +5,4 @@ package
 .eslintrc.json
 .travis.yml
 fixtures
-test
+test.js
