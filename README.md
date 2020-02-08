@@ -10,9 +10,6 @@ My lighterhtml based shadow element
 
 ### Install @cfware/shadow-element
 
-This is not a node module, though using it likely requires node.js 8 build
-system.  See [cfware/rollup-webapp] for a gulp@4 based build system template.
-
 This module makes use of [public class fields].
 
 ```sh
@@ -22,10 +19,10 @@ npm i -D @cfware/shadow-element
 ## Usage
 
 ```js
-import {ShadowElement, html} from '@cfware/shadow-element';
+import {ShadowElement, html, template} from '@cfware/shadow-element';
 
 class MyElement extends ShadowElement {
-	get template() {
+	get [template]() {
 		return html`
 			<style>
 				:host {
@@ -40,16 +37,6 @@ class MyElement extends ShadowElement {
 MyElement.define('my-element');
 ```
 
-## Running tests
-
-Testing is provided by `xo`, `ava` and `selenium-webdriver`.  Chrome and Firefox
-must be installed.
-
-```sh
-npm install
-npm test
-```
-
 [npm-image]: https://img.shields.io/npm/v/@cfware/shadow-element.svg
 [npm-url]: https://npmjs.org/package/@cfware/shadow-element
 [travis-image]: https://travis-ci.org/cfware/shadow-element.svg?branch=master
@@ -59,6 +46,4 @@ npm test
 [downloads-url]: https://npmjs.org/package/@cfware/shadow-element
 [license-image]: https://img.shields.io/npm/l/@cfware/shadow-element.svg
 
-[cfware/rollup-webapp]: https://github.com/cfware/rollup-webapp
-[hyperhtml-element]: https://github.com/WebReflection/hyperHTML-Element#readme
 [public class fields]: https://github.com/tc39/proposal-class-fields#readme

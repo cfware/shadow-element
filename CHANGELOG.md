@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.11.1](https://github.com/cfware/shadow-element/compare/v0.11.0...v0.11.1) (2020-02-05)
+
+
+### Bug Fixes
+
+* Use toggleAttribute to implement boolean properties ([73c5582](https://github.com/cfware/shadow-element/commit/73c558241de4d3dade42c12d880010f3de2ed1d5))
+
+## [0.11.0](https://github.com/cfware/shadow-element/compare/v0.10.3...v0.11.0) (2020-02-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* Remove documentEvent and windowEvent options
+* Use symbols for public ShadowElement fields
+
+### Features
+
+* Add options.lifecycleEvents Map ([782ae75](https://github.com/cfware/shadow-element/commit/782ae759b96029aa58d8348e786524f8764f6930))
+
 ### [0.10.3](https://github.com/cfware/shadow-element/compare/v0.10.2...v0.10.3) (2020-01-25)
 
 

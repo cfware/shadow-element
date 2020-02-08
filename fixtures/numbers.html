@@ -1,10 +1,10 @@
 <html>
 	<head>
 		<script type="module">
-			import {ShadowElement, html} from '/shadow-element.js';
+			import {ShadowElement, html, template} from '/shadow-element.js';
 
 			class NumericProp extends ShadowElement {
-				get template() {
+				get [template]() {
 					return html`${this.numericProp}`;
 				}
 			}

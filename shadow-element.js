@@ -1,21 +1,19 @@
-/* eslint-env browser */
-/* eslint prefer-named-capture-group: 0 */
 import {html, render} from 'lighterhtml';
 import Debouncer from '@cfware/debouncer';
 import runCallbacks from '@cfware/callback-array-once';
 import addEventListener from '@cfware/add-event-listener';
+import {decamelize} from './decamelize.js';
 
 export {html, render};
 
 export const htmlFor = html.for;
 export const htmlNode = html.node;
 
-function decamelizePropertyName(name) {
-	return name
-		.replace(/([a-z\d])([A-Z])/gu, '$1-$2')
-		.replace(/([a-z]+)([A-Z][a-z\d]+)/gu, '$1-$2')
-		.toLowerCase();
-}
+export const renderCallback = Symbol();
+export const debounceRenderCallback = Symbol();
+export const createBoundEventListeners = Symbol();
+export const addCleanups = Symbol();
+export const template = Symbol();
 
 function wireRenderProperties(proto, properties) {
 	for (const [name, value] of Object.entries(properties)) {
@@ -33,7 +31,7 @@ function wireRenderProperties(proto, properties) {
 				},
 				set(value) {
 					this[privSymbol] = value;
-					this.render();
+					this[renderCallback]();
 				}
 			}
 		});
@@ -42,7 +40,7 @@ function wireRenderProperties(proto, properties) {
 
 function reflectBooleanProperties(proto, names, observedAttributes) {
 	for (const name of names) {
-		const attributeName = decamelizePropertyName(name);
+		const attributeName = decamelize(name);
 
 		observedAttributes.add(attributeName);
 		Object.defineProperties(proto, {
@@ -52,11 +50,7 @@ function reflectBooleanProperties(proto, names, observedAttributes) {
 					return this.hasAttribute(attributeName);
 				},
 				set(value) {
-					if (value) {
-						this.setAttribute(attributeName, '');
-					} else {
-						this.removeAttribute(attributeName);
-					}
+					this.toggleAttribute(attributeName, Boolean(value));
 				}
 			}
 		});
@@ -65,7 +59,7 @@ function reflectBooleanProperties(proto, names, observedAttributes) {
 
 function typedReflectionProperties(proto, items, observedAttributes, attributeClass) {
 	for (const [name, defaultValue] of Object.entries(items)) {
-		const attributeName = decamelizePropertyName(name);
+		const attributeName = decamelize(name);
 
 		observedAttributes.add(attributeName);
 		Object.defineProperties(proto, {
@@ -89,8 +83,8 @@ function typedReflectionProperties(proto, items, observedAttributes, attributeCl
 export const metaLink = (url, metaURL) => new URL(url, metaURL).toString();
 
 export class ShadowElement extends HTMLElement {
-	_lifetimeCleanups = [];
-	_debounce = new Debouncer(() => this.renderCallback(), 10, 5);
+	_lifecycleCleanup = [];
+	_debounce = new Debouncer(() => this[debounceRenderCallback](), 10, 5);
 
 	constructor(mode = 'open') {
 		super();
@@ -98,16 +92,16 @@ export class ShadowElement extends HTMLElement {
 		this._shadowRoot = this.attachShadow({mode});
 	}
 
-	renderCallback() {
-		render(this._shadowRoot, () => this.template);
+	[debounceRenderCallback]() {
+		render(this._shadowRoot, () => this[template]);
 	}
 
-	render(immediately) {
+	[renderCallback](immediately) {
 		// Prevent `event` first argument from being treated as truthy
 		this._debounce.run(immediately === true);
 	}
 
-	createBoundEventListeners(owner, events) {
+	[createBoundEventListeners](owner, events) {
 		return Object.entries(events).map(([type, fn]) => {
 			if (['string', 'symbol'].includes(typeof fn)) {
 				const id = fn;
@@ -118,29 +112,28 @@ export class ShadowElement extends HTMLElement {
 		});
 	}
 
-	initEvents(owner, events) {
-		this._lifetimeCleanups.push(...this.createBoundEventListeners(owner, events));
+	[addCleanups](...callbacks) {
+		this._lifecycleCleanup.push(...callbacks);
 	}
 
 	connectedCallback() {
-		const {_document, _window} = this.constructor._lifetimeCleanups;
-
-		this.initEvents(document, _document);
-		this.initEvents(window, _window);
+		for (const [owner, events] of this.constructor._lifecycleEvents) {
+			this[addCleanups](...this[createBoundEventListeners](owner, events));
+		}
 
 		// Bypass debounce on initial render
-		this.render(true);
+		this[renderCallback](true);
 	}
 
 	disconnectedCallback() {
-		runCallbacks(this._lifetimeCleanups);
+		runCallbacks(this._lifecycleCleanup);
 	}
 
 	attributeChangedCallback() {
-		this.render();
+		this[renderCallback]();
 	}
 
-	static define(elementName, options = {}) {
+	static define(elementName, /* istanbul ignore next */ options = {}) {
 		const proto = this.prototype;
 		const observedAttributes = new Set(this.observedAttributes);
 
@@ -150,11 +143,8 @@ export class ShadowElement extends HTMLElement {
 		reflectBooleanProperties(proto, options.booleanProps || [], observedAttributes);
 
 		const properties = {
-			_lifetimeCleanups: {
-				value: {
-					_document: options.documentEvents || {},
-					_window: options.windowEvents || {}
-				}
+			_lifecycleEvents: {
+				value: options.lifecycleEvents || new Map()
 			}
 		};
 
@@ -169,47 +159,5 @@ export class ShadowElement extends HTMLElement {
 		Object.defineProperties(this, properties);
 
 		customElements.define(elementName, this);
-	}
-}
-
-export class ButtonElement extends ShadowElement {
-	get disabled() {
-		return this.hasAttribute('disabled');
-	}
-
-	set disabled(value) {
-		if (this.disabled === Boolean(value)) {
-			return;
-		}
-
-		if (value) {
-			this.removeAttribute('tabindex');
-			this.setAttribute('disabled', '');
-		} else {
-			this.setAttribute('tabindex', 0);
-			this.removeAttribute('disabled');
-		}
-	}
-
-	constructor() {
-		super();
-
-		const clickKeys = new Set(['Enter', ' ']);
-		this.addEventListener('keypress', event => {
-			if (clickKeys.has(event.key)) {
-				this.click();
-			}
-		});
-		this.addEventListener('click', event => {
-			if (this.disabled) {
-				event.preventDefault();
-				event.stopPropagation();
-				event.stopImmediatePropagation();
-			}
-		});
-		this.setAttribute('role', 'button');
-		if (!this.disabled) {
-			this.setAttribute('tabindex', 0);
-		}
 	}
 }
