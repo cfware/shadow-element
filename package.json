@@ -31,7 +31,7 @@
 		"lighterhtml": "^2.0.9"
 	},
 	"devDependencies": {
-		"@cfware/fastify-test-helper": "^0.6.0",
+		"@cfware/fastify-test-helper": "^0.7.0",
 		"@cfware/lint": "^1.1.0",
 		"@cfware/tap-selenium-manager": "^0.1.0",
 		"chromedriver": "^80.0.0",
