@@ -1,6 +1,6 @@
 # @cfware/shadow-element
 
-[![Travis CI][travis-image]][travis-url]
+![Tests][tests-status]
 [![Greenkeeper badge][gk-image]](https://greenkeeper.io/)
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
@@ -39,8 +39,7 @@ MyElement.define('my-element');
 
 [npm-image]: https://img.shields.io/npm/v/@cfware/shadow-element.svg
 [npm-url]: https://npmjs.org/package/@cfware/shadow-element
-[travis-image]: https://travis-ci.org/cfware/shadow-element.svg?branch=master
-[travis-url]: https://travis-ci.org/cfware/shadow-element
+[tests-status]: https://github.com/cfware/shadow-element/workflows/Tests/badge.svg
 [gk-image]: https://badges.greenkeeper.io/cfware/shadow-element.svg
 [downloads-image]: https://img.shields.io/npm/dm/@cfware/shadow-element.svg
 [downloads-url]: https://npmjs.org/package/@cfware/shadow-element
