@@ -1,4 +1,4 @@
-import {html, render} from 'lighterhtml';
+import {html, render} from 'uhtml';
 import Debouncer from '@cfware/debouncer';
 import runCallbacks from '@cfware/callback-array-once';
 import addEventListener from '@cfware/add-event-listener';
