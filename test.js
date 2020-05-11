@@ -216,6 +216,12 @@ const pages = {
 
 		t.equal(await selenium.executeScript(() => document.windowClicks), 2);
 		t.equal(await selenium.executeScript(() => document.documentClicks), 2);
+	},
+
+	async 'no-options.html'(t, selenium) {
+		const element = await selenium.findElement({id: 'test'});
+
+		t.equal(await element.getText(), 'No Options');
 	}
 };
 

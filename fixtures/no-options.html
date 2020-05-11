@@ -1,0 +1,18 @@
+<html>
+	<head>
+		<script type="module">
+			import {ShadowElement, html, template} from '/shadow-element.js';
+
+			class NoOptions extends ShadowElement {
+				get [template]() {
+					return html`No Options`;
+				}
+			}
+
+			NoOptions.define('no-options');
+		</script>
+	</head>
+	<body>
+		<no-options id="test"></no-options>
+	</body>
+</html>
