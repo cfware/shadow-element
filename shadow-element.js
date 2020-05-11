@@ -133,7 +133,7 @@ export class ShadowElement extends HTMLElement {
 		this[renderCallback]();
 	}
 
-	static define(elementName, /* istanbul ignore next */ options = {}) {
+	static define(elementName, options = {}) {
 		const proto = this.prototype;
 		const observedAttributes = new Set(this.observedAttributes);
 
