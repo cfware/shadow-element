@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.0](https://github.com/cfware/shadow-element/compare/v0.13.0...v0.14.0) (2020-09-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* Convert all properties not defined by HTMLElement to
+Symbols.
+* Convert all define options to Symbols.
+
+### Features
+
+* Upgrade uhtml ([0f647e4](https://github.com/cfware/shadow-element/commit/0f647e49ef00e8f66813aba61561214d1234079a))
+
 ## [0.13.0](https://github.com/cfware/shadow-element/compare/v0.12.0...v0.13.0) (2020-04-02)
 
 
