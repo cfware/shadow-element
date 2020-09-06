@@ -2,6 +2,7 @@ import {html, render} from 'uhtml';
 import Debouncer from '@cfware/debouncer';
 import runCallbacks from '@cfware/callback-array-once';
 import addEventListener from '@cfware/add-event-listener';
+import Symbols from '@cfware/symbols';
 import {decamelize} from './decamelize.js';
 
 export {html, render};
@@ -9,11 +10,19 @@ export {html, render};
 export const htmlFor = html.for;
 export const htmlNode = html.node;
 
-export const renderCallback = Symbol();
-export const debounceRenderCallback = Symbol();
-export const createBoundEventListeners = Symbol();
-export const addCleanups = Symbol();
-export const template = Symbol();
+export const [
+	renderCallback,
+	debounceRenderCallback,
+	createBoundEventListeners,
+	addCleanups,
+	template,
+	define,
+	renderProperties,
+	stringProperties,
+	numericProperties,
+	booleanProperties,
+	lifecycleEvents
+] = Symbols;
 
 function wireRenderProperties(proto, properties) {
 	for (const [name, value] of Object.entries(properties)) {
@@ -133,18 +142,18 @@ export class ShadowElement extends HTMLElement {
 		this[renderCallback]();
 	}
 
-	static define(elementName, options = {}) {
+	static [define](elementName, options = {}) {
 		const proto = this.prototype;
 		const observedAttributes = new Set(this.observedAttributes);
 
-		wireRenderProperties(proto, options.renderProps || {});
-		typedReflectionProperties(proto, options.stringProps || {}, observedAttributes, String);
-		typedReflectionProperties(proto, options.numericProps || {}, observedAttributes, Number);
-		reflectBooleanProperties(proto, options.booleanProps || [], observedAttributes);
+		wireRenderProperties(proto, options[renderProperties] || {});
+		typedReflectionProperties(proto, options[stringProperties] || {}, observedAttributes, String);
+		typedReflectionProperties(proto, options[numericProperties] || {}, observedAttributes, Number);
+		reflectBooleanProperties(proto, options[booleanProperties] || [], observedAttributes);
 
 		const properties = {
 			_lifecycleEvents: {
-				value: options.lifecycleEvents || new Map()
+				value: options[lifecycleEvents] || new Map()
 			}
 		};
 

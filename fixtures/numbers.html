@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<script type="module">
-			import {ShadowElement, html, template} from '/shadow-element.js';
+			import {ShadowElement, html, template, define, numericProperties} from '/shadow-element.js';
 
 			class NumericProp extends ShadowElement {
 				get [template]() {
@@ -9,8 +9,8 @@
 				}
 			}
 
-			NumericProp.define('numeric-prop', {
-				numericProps: {
+			NumericProp[define]('numeric-prop', {
+				[numericProperties]: {
 					numericProp: 5
 				}
 			});

@@ -1,13 +1,10 @@
 <html>
 	<head>
 		<script type="module">
-			import {ShadowElement, html, template} from '/shadow-element.js';
+			import {ShadowElement, html, template, define, renderProperties} from '/shadow-element.js';
 
 			class RenderProp extends ShadowElement {
-				constructor() {
-					super();
-					this.renderCount = 0;
-				}
+				renderCount = 0;
 
 				get [template]() {
 					this.renderCount++;
@@ -15,8 +12,8 @@
 				}
 			}
 
-			RenderProp.define('render-prop', {
-				renderProps: {
+			RenderProp[define]('render-prop', {
+				[renderProperties]: {
 					prop1: 'property 1',
 					get prop2() {
 						return [1, 2];

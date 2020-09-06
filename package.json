@@ -28,11 +28,12 @@
 		"@cfware/add-event-listener": "^0.1.1",
 		"@cfware/callback-array-once": "^1.0.2",
 		"@cfware/debouncer": "^0.3.3",
-		"uhtml": "^1.9.0"
+		"@cfware/symbols": "^0.1.0",
+		"uhtml": "^2.1.1"
 	},
 	"devDependencies": {
 		"@cfware/fastify-test-helper": "^0.7.0",
-		"@cfware/lint": "^1.1.0",
+		"@cfware/lint": "^2.0.1",
 		"@cfware/nyc": "^0.7.0",
 		"@cfware/tap-selenium-manager": "^1.0.0",
 		"libtap": "^0.3.0",

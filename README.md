@@ -1,13 +1,13 @@
 # @cfware/shadow-element [![NPM Version][npm-image]][npm-url]
 
-My lighterhtml based shadow element
+My uhtml based shadow element
 
 ## Usage
 
-This module makes use of [public class fields].
+This module makes use of public class fields.
 
 ```js
-import {ShadowElement, html, template} from '@cfware/shadow-element';
+import {ShadowElement, html, template, define} from '@cfware/shadow-element';
 
 class MyElement extends ShadowElement {
 	get [template]() {
@@ -22,7 +22,7 @@ class MyElement extends ShadowElement {
 	}
 }
 
-MyElement.define('my-element');
+MyElement[define]('my-element');
 ```
 
 

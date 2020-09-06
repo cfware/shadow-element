@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<script type="module">
-			import {ShadowElement, html, template} from '/shadow-element.js';
+			import {ShadowElement, html, template, define, booleanProperties} from '/shadow-element.js';
 
 			class BooleanProp extends ShadowElement {
 				get [template]() {
@@ -13,8 +13,8 @@
 				}
 			}
 
-			BooleanProp.define('boolean-prop', {
-				booleanProps: ['booleanProp']
+			BooleanProp[define]('boolean-prop', {
+				[booleanProperties]: ['booleanProp']
 			});
 		</script>
 	</head>
