@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.15.0](https://github.com/cfware/shadow-element/compare/v0.14.0...v0.15.0) (2020-09-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* Provide ShadowElement as default export
+
+### Features
+
+* Provide ShadowElement as default export ([ebdb05f](https://github.com/cfware/shadow-element/commit/ebdb05fdfb0c2cca9ada66b6f387963248cb73b4))
+
 ## [0.14.0](https://github.com/cfware/shadow-element/compare/v0.13.0...v0.14.0) (2020-09-06)
 
 
