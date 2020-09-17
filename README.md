@@ -7,7 +7,7 @@ My uhtml based shadow element
 This module makes use of public class fields.
 
 ```js
-import {ShadowElement, html, template, define} from '@cfware/shadow-element';
+import ShadowElement, {html, template, define} from '@cfware/shadow-element';
 
 class MyElement extends ShadowElement {
 	get [template]() {

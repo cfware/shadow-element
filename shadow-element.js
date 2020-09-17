@@ -91,7 +91,7 @@ function typedReflectionProperties(proto, items, observedAttributes, attributeCl
 
 export const metaLink = (url, metaURL) => new URL(url, metaURL).toString();
 
-export class ShadowElement extends HTMLElement {
+export default class ShadowElement extends HTMLElement {
 	_lifecycleCleanup = [];
 	_debounce = new Debouncer(() => this[debounceRenderCallback](), 10, 5);
 
