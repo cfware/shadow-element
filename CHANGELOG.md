@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.15.1](https://github.com/cfware/shadow-element/compare/v0.15.0...v0.15.1) (2020-10-21)
+
+
+### Features
+
+* Add booleanAttribute utility function ([c3f3c58](https://github.com/cfware/shadow-element/commit/c3f3c58939a9bd90bc13a07258d0a69aa9e40830))
+
 ## [0.15.0](https://github.com/cfware/shadow-element/compare/v0.14.0...v0.15.0) (2020-09-17)
 
 
