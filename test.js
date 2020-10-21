@@ -144,6 +144,12 @@ const pages = {
 		t.equal(await selenium.executeScript(element => element.booleanProp, element), false);
 		await selenium.sleep(100);
 		t.equal(await element.getText(), 'false');
+
+		t.ok(await selenium.executeScript(element => element.checkBooleanAttribute() === undefined, element), 'no arg');
+		t.ok(await selenium.executeScript(element => element.checkBooleanAttribute('') === undefined, element), 'empty string');
+		t.ok(await selenium.executeScript(element => element.checkBooleanAttribute(false) === undefined, element), 'false');
+		t.ok(await selenium.executeScript(element => element.checkBooleanAttribute(true) === '', element), 'true');
+		t.ok(await selenium.executeScript(element => element.checkBooleanAttribute('yes') === '', element), 'yes');
 	},
 
 	async 'meta-link.html'(t, selenium) {
