@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<script type="module">
-			import ShadowElement, {html, template, define, renderProperties} from '/shadow-element.js';
+			import ShadowElement, {html, template, wireRenderProperties, define} from '/shadow-element.js';
 
 			class RenderProp extends ShadowElement {
 				renderCount = 0;
@@ -12,14 +12,13 @@
 				}
 			}
 
-			RenderProp[define]('render-prop', {
-				[renderProperties]: {
-					prop1: 'property 1',
-					get prop2() {
-						return [1, 2];
-					}
+			wireRenderProperties(RenderProp, {
+				prop1: 'property 1',
+				get prop2() {
+					return [1, 2];
 				}
 			});
+			RenderProp[define]('render-prop');
 		</script>
 	</head>
 	<body>

@@ -3,7 +3,7 @@ import Debouncer from '@cfware/debouncer';
 import runCallbacks from '@cfware/callback-array-once';
 import addEventListener from '@cfware/add-event-listener';
 import Symbols from '@cfware/symbols';
-import {decamelize} from './decamelize.js';
+import decamelize from '@cfware/decamelize';
 
 export {html, render};
 
@@ -17,18 +17,14 @@ export const [
 	addCleanups,
 	template,
 	define,
-	renderProperties,
-	stringProperties,
-	numericProperties,
-	booleanProperties,
 	lifecycleEvents
 ] = Symbols;
 
-function wireRenderProperties(proto, properties) {
+export const wireRenderProperties = (Klass, properties) => {
 	for (const [name, value] of Object.entries(properties)) {
 		const privSymbol = Symbol(name);
 
-		Object.defineProperties(proto, {
+		Object.defineProperties(Klass.prototype, {
 			[privSymbol]: {
 				writable: true,
 				value
@@ -45,14 +41,28 @@ function wireRenderProperties(proto, properties) {
 			}
 		});
 	}
-}
+};
 
-function reflectBooleanProperties(proto, names, observedAttributes) {
+const getObservedAttributes = Klass => new Set(Klass.observedAttributes);
+
+const setObservedAttributes = (Klass, observedAttributes) => {
+	Object.defineProperties(Klass, {
+		observedAttributes: {
+			enumerable: true,
+			get() {
+				return [...observedAttributes];
+			}
+		}
+	});
+};
+
+export const reflectBooleanProperties = (Klass, names) => {
+	const observedAttributes = getObservedAttributes(Klass);
 	for (const name of names) {
 		const attributeName = decamelize(name);
 
 		observedAttributes.add(attributeName);
-		Object.defineProperties(proto, {
+		Object.defineProperties(Klass.prototype, {
 			[name]: {
 				enumerable: true,
 				get() {
@@ -64,21 +74,25 @@ function reflectBooleanProperties(proto, names, observedAttributes) {
 			}
 		});
 	}
-}
 
-function typedReflectionProperties(proto, items, observedAttributes, attributeClass) {
+	setObservedAttributes(Klass, observedAttributes);
+};
+
+const reflectTypedProperties = (Klass, items, attributeClass) => {
+	const observedAttributes = getObservedAttributes(Klass);
 	for (const [name, defaultValue] of Object.entries(items)) {
 		const attributeName = decamelize(name);
 
 		observedAttributes.add(attributeName);
-		Object.defineProperties(proto, {
+		Object.defineProperties(Klass.prototype, {
 			[name]: {
 				enumerable: true,
 				get() {
-					return attributeClass(this.hasAttribute(attributeName) ? this.getAttribute(attributeName) : defaultValue);
+					return this.hasAttribute(attributeName) ? attributeClass(this.getAttribute(attributeName)) : defaultValue;
 				},
 				set(value) {
-					if (value == null) { // eslint-disable-line eqeqeq
+					// eslint-disable-next-line eqeqeq
+					if (value == null) {
 						this.removeAttribute(attributeName);
 					} else {
 						this.setAttribute(attributeName, value);
@@ -87,7 +101,14 @@ function typedReflectionProperties(proto, items, observedAttributes, attributeCl
 			}
 		});
 	}
-}
+
+	setObservedAttributes(Klass, observedAttributes);
+};
+
+
+export const reflectStringProperties = (Klass, items) => reflectTypedProperties(Klass, items, String);
+
+export const reflectNumericProperties = (Klass, items) => reflectTypedProperties(Klass, items, Number);
 
 export const metaLink = (url, metaURL) => new URL(url, metaURL).toString();
 
@@ -96,6 +117,10 @@ export const booleanAttribute = value => value ? '' : undefined;
 export default class ShadowElement extends HTMLElement {
 	_lifecycleCleanup = [];
 	_debounce = new Debouncer(() => this[debounceRenderCallback](), 10, 5);
+
+	static get observedAttributes() {
+		return [];
+	}
 
 	constructor(mode = 'open') {
 		super();
@@ -115,8 +140,7 @@ export default class ShadowElement extends HTMLElement {
 	[createBoundEventListeners](owner, events) {
 		return Object.entries(events).map(([type, fn]) => {
 			if (['string', 'symbol'].includes(typeof fn)) {
-				const id = fn;
-				fn = (...args) => this[id](...args);
+				fn = this[fn].bind(this);
 			}
 
 			return addEventListener(owner, type, fn);
@@ -128,7 +152,7 @@ export default class ShadowElement extends HTMLElement {
 	}
 
 	connectedCallback() {
-		for (const [owner, events] of this.constructor._lifecycleEvents) {
+		for (const [owner, events] of (this.constructor[lifecycleEvents] ?? [])) {
 			this[addCleanups](...this[createBoundEventListeners](owner, events));
 		}
 
@@ -144,31 +168,7 @@ export default class ShadowElement extends HTMLElement {
 		this[renderCallback]();
 	}
 
-	static [define](elementName, options = {}) {
-		const proto = this.prototype;
-		const observedAttributes = new Set(this.observedAttributes);
-
-		wireRenderProperties(proto, options[renderProperties] || {});
-		typedReflectionProperties(proto, options[stringProperties] || {}, observedAttributes, String);
-		typedReflectionProperties(proto, options[numericProperties] || {}, observedAttributes, Number);
-		reflectBooleanProperties(proto, options[booleanProperties] || [], observedAttributes);
-
-		const properties = {
-			_lifecycleEvents: {
-				value: options[lifecycleEvents] || new Map()
-			}
-		};
-
-		if (observedAttributes.size > 0) {
-			properties.observedAttributes = {
-				get() {
-					return observedAttributes;
-				}
-			};
-		}
-
-		Object.defineProperties(this, properties);
-
+	static [define](elementName) {
 		customElements.define(elementName, this);
 	}
 }

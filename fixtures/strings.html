@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<script type="module">
-			import ShadowElement, {html, template, define, stringProperties} from '/shadow-element.js';
+			import ShadowElement, {html, template, reflectStringProperties, define} from '/shadow-element.js';
 
 			class StringProp extends ShadowElement {
 				get [template]() {
@@ -9,11 +9,8 @@
 				}
 			}
 
-			StringProp[define]('string-prop', {
-				[stringProperties]: {
-					stringProp: 'String Prop'
-				}
-			});
+			reflectStringProperties(StringProp, {stringProp: 'String Prop', undefinable: undefined});
+			StringProp[define]('string-prop');
 		</script>
 	</head>
 	<body>

@@ -1,10 +1,22 @@
 <html>
 	<head>
 		<script type="module">
-			import ShadowElement, {html, template, define, lifecycleEvents} from '/shadow-element.js';
+			import ShadowElement, {html, template, lifecycleEvents, define} from '/shadow-element.js';
 
 			const symKeyPress = Symbol();
 			class EventSetup extends ShadowElement {
+				static [lifecycleEvents] = new Map([
+					[document, {
+						click: event => {
+							document.documentClicks++;
+						}
+					}],
+					[window, {
+						keypress: symKeyPress,
+						click: '_windowClick'
+					}]
+				]);
+
 				constructor() {
 					super();
 
@@ -28,19 +40,7 @@
 
 			document.windowClicks = 0;
 			document.documentClicks = 0;
-			EventSetup[define]('event-setup', {
-				[lifecycleEvents]: new Map([
-					[document, {
-						click: event => {
-							document.documentClicks++;
-						}
-					}],
-					[window, {
-						keypress: symKeyPress,
-						click: '_windowClick'
-					}]
-				])
-			});
+			EventSetup[define]('event-setup');
 		</script>
 	</head>
 	<body>

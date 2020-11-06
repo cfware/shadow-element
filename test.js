@@ -6,6 +6,7 @@ const pages = {
 	async 'strings.html'(t, selenium) {
 		const element = await selenium.findElement({id: 'test'});
 
+		t.equal(await selenium.executeScript(element => element.undefinable === undefined, element), true);
 		t.equal(await selenium.executeScript(element => element.stringProp, element), 'String Prop');
 		t.equal(await element.getText(), 'String Prop');
 
@@ -30,6 +31,8 @@ const pages = {
 		await selenium.sleep(100);
 		t.equal(await element.getText(), 'String Prop');
 
+		await selenium.executeScript(element => element.setAttribute('undefinable', 'test'), element);
+		t.equal(await selenium.executeScript(element => element.undefinable, element), 'test');
 		const property = await selenium.executeScript(element => {
 			element.setAttribute('string-prop', 'reset it');
 
@@ -233,7 +236,6 @@ const pages = {
 
 const daemon = new FastifyTestHelper({
 	customGetters: {
-		'/decamelize.js': 'decamelize.js',
 		'/shadow-element.js': 'shadow-element.js'
 	}
 });

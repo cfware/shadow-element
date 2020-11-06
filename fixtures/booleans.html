@@ -1,15 +1,16 @@
 <html>
 	<head>
 		<script type="module">
-			import ShadowElement, {html, template, define, booleanProperties, booleanAttribute} from '/shadow-element.js';
+			import ShadowElement, {html, template, booleanAttribute, reflectBooleanProperties, define} from '/shadow-element.js';
 
+			const observedAttributes = new Set();
 			class BooleanProp extends ShadowElement {
 				get [template]() {
 					return html`${this.booleanProp}`;
 				}
 
 				static get observedAttributes() {
-					return ['boolean-prop'];
+					return observedAttributes;
 				}
 
 				checkBooleanAttribute(value) {
@@ -17,9 +18,8 @@
 				}
 			}
 
-			BooleanProp[define]('boolean-prop', {
-				[booleanProperties]: ['booleanProp']
-			});
+			reflectBooleanProperties(BooleanProp, ['booleanProp']);
+			BooleanProp[define]('boolean-prop');
 		</script>
 	</head>
 	<body>

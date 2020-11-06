@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<script type="module">
-			import ShadowElement, {metaLink, html, template, define, stringProperties} from '/shadow-element.js';
+			import ShadowElement, {metaLink, html, template, reflectStringProperties, define} from '/shadow-element.js';
 
 			class MetaLink extends ShadowElement {
 				get href() {
@@ -13,12 +13,11 @@
 				}
 			}
 
-			MetaLink[define]('meta-link', {
-				[stringProperties]: {
-					metaURL: 'http://localhost/meta-link.html',
-					url: 'index.css'
-				}
+			reflectStringProperties(MetaLink, {
+				metaURL: 'http://localhost/meta-link.html',
+				url: 'index.css'
 			});
+			MetaLink[define]('meta-link');
 		</script>
 	</head>
 	<body>
