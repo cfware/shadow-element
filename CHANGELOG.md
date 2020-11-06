@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.16.0](https://github.com/cfware/shadow-element/compare/v0.15.1...v0.16.0) (2020-11-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* Options are removed from static [define]()
+
+### Features
+
+* Export functions to decorate class ([5b3897b](https://github.com/cfware/shadow-element/commit/5b3897b05e18a9daf1066e2900a64224f8a51f9b))
+
 ### [0.15.1](https://github.com/cfware/shadow-element/compare/v0.15.0...v0.15.1) (2020-10-21)
 
 
