@@ -105,7 +105,6 @@ const reflectTypedProperties = (Klass, items, attributeClass) => {
 	setObservedAttributes(Klass, observedAttributes);
 };
 
-
 export const reflectStringProperties = (Klass, items) => reflectTypedProperties(Klass, items, String);
 
 export const reflectNumericProperties = (Klass, items) => reflectTypedProperties(Klass, items, Number);
