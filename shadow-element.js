@@ -49,6 +49,7 @@ const setObservedAttributes = (Klass, observedAttributes) => {
 	Object.defineProperties(Klass, {
 		observedAttributes: {
 			enumerable: true,
+			configurable: true,
 			get() {
 				return [...observedAttributes];
 			}
