@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.16.1](https://github.com/cfware/shadow-element/compare/v0.16.0...v0.16.1) (2020-11-07)
+
+
+### Bug Fixes
+
+* observedAttributes property needs to be configurable ([f010dec](https://github.com/cfware/shadow-element/commit/f010dec04edfb9b9cdf2bf9e97e070c084ac70c8))
+
 ## [0.16.0](https://github.com/cfware/shadow-element/compare/v0.15.1...v0.16.0) (2020-11-06)
 
 
