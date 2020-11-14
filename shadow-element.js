@@ -12,6 +12,7 @@ export const htmlNode = html.node;
 
 export const [
 	renderCallback,
+	renderCallbackImmediate,
 	debounceRenderCallback,
 	createBoundEventListeners,
 	addCleanups,
@@ -132,6 +133,10 @@ export default class ShadowElement extends HTMLElement {
 		render(this._shadowRoot, () => this[template]);
 	}
 
+	[renderCallbackImmediate]() {
+		this[renderCallback](true);
+	}
+
 	[renderCallback](immediately) {
 		// Prevent `event` first argument from being treated as truthy
 		this._debounce.run(immediately === true);
@@ -157,7 +162,7 @@ export default class ShadowElement extends HTMLElement {
 		}
 
 		// Bypass debounce on initial render
-		this[renderCallback](true);
+		this[renderCallbackImmediate]();
 	}
 
 	disconnectedCallback() {
