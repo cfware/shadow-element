@@ -148,7 +148,7 @@ export default class ShadowElement extends HTMLElement {
 				fn = this[fn].bind(this);
 			}
 
-			return addEventListener(owner, type, fn);
+			return addEventListener(owner ?? this, type, fn);
 		});
 	}
 

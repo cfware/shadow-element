@@ -4,8 +4,12 @@
 			import ShadowElement, {html, template, lifecycleEvents, define} from '/shadow-element.js';
 
 			const symKeyPress = Symbol();
+			const elementClick = Symbol();
 			class EventSetup extends ShadowElement {
 				static [lifecycleEvents] = new Map([
+					[undefined, {
+						click: elementClick
+					}],
 					[document, {
 						click: event => {
 							document.documentClicks++;
@@ -22,6 +26,7 @@
 
 					this.keyPresses = 0;
 					this.windowClicks = 0;
+					this.elementClicks = 0;
 				}
 
 				get [template]() {
@@ -30,6 +35,10 @@
 
 				[symKeyPress](event) {
 					this.keyPresses++;
+				}
+
+				[elementClick](event) {
+					this.elementClicks++;
 				}
 
 				_windowClick(event) {

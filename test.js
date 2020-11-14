@@ -203,16 +203,19 @@ const pages = {
 
 		t.equal(await selenium.executeScript(element => element.windowClicks, element), 0);
 		t.equal(await selenium.executeScript(() => document.documentClicks), 0);
+		t.equal(await selenium.executeScript(element => element.elementClicks, element), 0);
 
 		await element.click();
 
 		t.equal(await selenium.executeScript(element => element.windowClicks, element), 1);
 		t.equal(await selenium.executeScript(() => document.documentClicks), 1);
+		t.equal(await selenium.executeScript(element => element.elementClicks, element), 1);
 
 		await selenium.executeScript(() => document.body.click());
 
 		t.equal(await selenium.executeScript(element => element.windowClicks, element), 2);
 		t.equal(await selenium.executeScript(() => document.documentClicks), 2);
+		t.equal(await selenium.executeScript(element => element.elementClicks, element), 1);
 
 		t.equal(await selenium.executeScript(element => element.keyPresses, element), 0);
 		await element.sendKeys('a');
