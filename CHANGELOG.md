@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.16.2](https://github.com/cfware/shadow-element/compare/v0.16.1...v0.16.2) (2020-11-16)
+
+
+### Features
+
+* Expose renderCallbackImmediate function ([43da80b](https://github.com/cfware/shadow-element/commit/43da80bb584fd0309d1c0b0316eb3ee96223a904))
+* Map undefined lifecycle object to current element ([c5a5da5](https://github.com/cfware/shadow-element/commit/c5a5da5c54e6f217973a1b95c00a378882888892))
+
 ### [0.16.1](https://github.com/cfware/shadow-element/compare/v0.16.0...v0.16.1) (2020-11-07)
 
 

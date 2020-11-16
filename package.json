@@ -1,6 +1,6 @@
 {
 	"name": "@cfware/shadow-element",
-	"version": "0.16.1",
+	"version": "0.16.2",
 	"description": "My uhtml based shadow element",
 	"main": "shadow-element.js",
 	"type": "module",
