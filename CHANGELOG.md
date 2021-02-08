@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.16.3](https://github.com/cfware/shadow-element/compare/v0.16.2...v0.16.3) (2021-02-08)
+
+
+### Features
+
+* Enable automatic support for adoptedStyleSheets ([d941031](https://github.com/cfware/shadow-element/commit/d94103186d42a08ce0b668a1df7a9e0ec0b52f71))
+
 ### [0.16.2](https://github.com/cfware/shadow-element/compare/v0.16.1...v0.16.2) (2020-11-16)
 
 
