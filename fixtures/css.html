@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<script type="module">
+			import ShadowElement, {css, html, template, adoptedStyleSheets, define} from '/shadow-element.js';
+
+			class StylizedElement extends ShadowElement {
+				get [adoptedStyleSheets]() {
+					return [
+						css`:host{height:${'10px'}}`
+					];
+				}
+
+				get [template]() {
+					return html``;
+				}
+			}
+
+			StylizedElement[define]('stylized-element');
+		</script>
+	</head>
+	<body>
+		<stylized-element id="test"></stylized-element>
+	</body>
+</html>

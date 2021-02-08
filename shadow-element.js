@@ -17,9 +17,40 @@ export const [
 	createBoundEventListeners,
 	addCleanups,
 	template,
+	adoptedStyleSheets,
 	define,
 	lifecycleEvents
 ] = Symbols;
+
+const supportsAdoptedStyleSheets =
+	('adoptedStyleSheets' in Document.prototype) &&
+	('replace' in CSSStyleSheet.prototype);
+
+const cssTemplate = (parts, ...bindings) => {
+	return parts[0] + bindings
+		.map((binding, index) => `${binding}${parts[index + 1]}`)
+		.join('');
+};
+
+const createLegacyStyleSheet = (...templateArgs) => {
+	return () => html([`<style>${cssTemplate(...templateArgs)}</style>`]);
+};
+
+const createConstructableStyleSheet = (...templateArgs) => {
+	let result;
+
+	return () => {
+		/* istanbul ignore else: we only process each style once in testing */
+		if (!result) {
+			result = new CSSStyleSheet();
+			result.replaceSync(cssTemplate(...templateArgs));
+		}
+
+		return result;
+	};
+};
+
+export const css = supportsAdoptedStyleSheets ? createConstructableStyleSheet : createLegacyStyleSheet;
 
 export const wireRenderProperties = (Klass, properties) => {
 	for (const [name, value] of Object.entries(properties)) {
@@ -130,7 +161,10 @@ export default class ShadowElement extends HTMLElement {
 	}
 
 	[debounceRenderCallback]() {
-		render(this._shadowRoot, () => this[template]);
+		render(
+			this._shadowRoot,
+			supportsAdoptedStyleSheets ? this[template] : html`${this._adoptedStyleSheets}${this[template]}`
+		);
 	}
 
 	[renderCallbackImmediate]() {
@@ -159,6 +193,13 @@ export default class ShadowElement extends HTMLElement {
 	connectedCallback() {
 		for (const [owner, events] of (this.constructor[lifecycleEvents] ?? [])) {
 			this[addCleanups](...this[createBoundEventListeners](owner, events));
+		}
+
+		const sheets = this[adoptedStyleSheets]?.map(sheet => sheet()) ?? [];
+		if (supportsAdoptedStyleSheets) {
+			this._shadowRoot.adoptedStyleSheets = sheets;
+		} else {
+			this._adoptedStyleSheets = sheets;
 		}
 
 		// Bypass debounce on initial render

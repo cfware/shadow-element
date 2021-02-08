@@ -234,6 +234,12 @@ const pages = {
 		const element = await selenium.findElement({id: 'test'});
 
 		t.equal(await element.getText(), 'No Options');
+	},
+
+	async 'css.html'(t, selenium) {
+		const element = await selenium.findElement({id: 'test'});
+
+		t.equal(await element.getCssValue('height'), '10px');
 	}
 };
 
