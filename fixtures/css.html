@@ -1,17 +1,23 @@
 <html>
 	<head>
 		<script type="module">
-			import ShadowElement, {css, html, template, adoptedStyleSheets, define} from '/shadow-element.js';
+			import ShadowElement, {css, html, template, adoptedStyleSheets, addAdoptedStyleSheets, adoptDocumentStyleSheets, define} from '/shadow-element.js';
+
+			adoptDocumentStyleSheets(css`stylized-element{min-height:5px;}`);
 
 			class StylizedElement extends ShadowElement {
-				get [adoptedStyleSheets]() {
-					return [
-						css`:host{height:${'10px'}}`
-					];
-				}
+				static [adoptedStyleSheets] = [
+					css`:host{width:10px;height:${'10px'}}`
+				];
 
 				get [template]() {
 					return html``;
+				}
+
+				taller() {
+					this[addAdoptedStyleSheets](css`
+						:host{height:20px}
+					`);
 				}
 			}
 

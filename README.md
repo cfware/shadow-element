@@ -7,18 +7,19 @@ My uhtml based shadow element
 This module makes use of public class fields.
 
 ```js
-import ShadowElement, {html, template, define} from '@cfware/shadow-element';
+import ShadowElement, {html, template, css, adoptedStyleSheets, define} from '@cfware/shadow-element';
 
 class MyElement extends ShadowElement {
+	static [adoptedStyleSheets] = [
+		css`
+			:host {
+				background: blue;
+			}
+		`
+	];
+
 	get [template]() {
-		return html`
-			<style>
-				:host {
-					background: blue;
-				}
-			</style>
-			I'm blue
-		`;
+		return html`I'm blue`;
 	}
 }
 

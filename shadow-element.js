@@ -162,6 +162,7 @@ export const booleanAttribute = value => value ? '' : undefined;
 
 export default class ShadowElement extends HTMLElement {
 	_lifecycleCleanup = [];
+	_adoptedStyleSheets = [];
 	_debounce = new Debouncer(() => this[debounceRenderCallback](), 10, 5);
 
 	static get observedAttributes() {
@@ -221,7 +222,10 @@ export default class ShadowElement extends HTMLElement {
 				this[renderCallbackImmediate]();
 			}
 		} else {
-			this._adoptedStyleSheets.push(...sheets);
+			this._adoptedStyleSheets = [
+				...this._adoptedStyleSheets,
+				...sheets
+			];
 			this[renderCallbackImmediate]();
 		}
 	}
@@ -231,7 +235,17 @@ export default class ShadowElement extends HTMLElement {
 			this[addCleanups](...this[createBoundEventListeners](owner, events));
 		}
 
-		this._addAdoptedStyleSheets(true, this[adoptedStyleSheets]?.map(lazySheetMapper) ?? []);
+		const sheets = [];
+		let Klass = this.constructor;
+		while (Klass) {
+			if (adoptedStyleSheets in Klass) {
+				sheets.unshift(...Klass[adoptedStyleSheets]);
+			}
+
+			Klass = Object.getPrototypeOf(Klass);
+		}
+
+		this._addAdoptedStyleSheets(true, sheets);
 	}
 
 	disconnectedCallback() {
