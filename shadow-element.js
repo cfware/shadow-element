@@ -50,7 +50,20 @@ const createConstructableStyleSheet = (...templateArgs) => {
 	};
 };
 
+const lazySheetMapper = sheet => sheet();
+
 export const css = supportsAdoptedStyleSheets ? createConstructableStyleSheet : createLegacyStyleSheet;
+
+export const adoptDocumentStyleSheets = (...sheets) => {
+	if (supportsAdoptedStyleSheets) {
+		document.adoptedStyleSheets = [
+			...document.adoptedStyleSheets,
+			...sheets.map(lazySheetMapper)
+		];
+	} else {
+		document.head.append(...sheets.map(sheet => htmlNode`${sheet()}`));
+	}
+};
 
 export const wireRenderProperties = (Klass, properties) => {
 	for (const [name, value] of Object.entries(properties)) {
@@ -195,7 +208,7 @@ export default class ShadowElement extends HTMLElement {
 			this[addCleanups](...this[createBoundEventListeners](owner, events));
 		}
 
-		const sheets = this[adoptedStyleSheets]?.map(sheet => sheet()) ?? [];
+		const sheets = this[adoptedStyleSheets]?.map(lazySheetMapper) ?? [];
 		if (supportsAdoptedStyleSheets) {
 			this._shadowRoot.adoptedStyleSheets = sheets;
 		} else {
