@@ -17,6 +17,7 @@ export const [
 	createBoundEventListeners,
 	addCleanups,
 	template,
+	addAdoptedStyleSheets,
 	adoptedStyleSheets,
 	define,
 	lifecycleEvents
@@ -203,20 +204,34 @@ export default class ShadowElement extends HTMLElement {
 		this._lifecycleCleanup.push(...callbacks);
 	}
 
+	[addAdoptedStyleSheets](...sheets) {
+		this._addAdoptedStyleSheets(false, sheets);
+	}
+
+	_addAdoptedStyleSheets(inSetup, sheets) {
+		sheets = sheets.map(lazySheetMapper);
+		if (supportsAdoptedStyleSheets) {
+			this._shadowRoot.adoptedStyleSheets = [
+				...this._shadowRoot.adoptedStyleSheets,
+				...sheets
+			];
+
+			if (inSetup) {
+				// Bypass debounce for initial render
+				this[renderCallbackImmediate]();
+			}
+		} else {
+			this._adoptedStyleSheets.push(...sheets);
+			this[renderCallbackImmediate]();
+		}
+	}
+
 	connectedCallback() {
 		for (const [owner, events] of (this.constructor[lifecycleEvents] ?? [])) {
 			this[addCleanups](...this[createBoundEventListeners](owner, events));
 		}
 
-		const sheets = this[adoptedStyleSheets]?.map(lazySheetMapper) ?? [];
-		if (supportsAdoptedStyleSheets) {
-			this._shadowRoot.adoptedStyleSheets = sheets;
-		} else {
-			this._adoptedStyleSheets = sheets;
-		}
-
-		// Bypass debounce on initial render
-		this[renderCallbackImmediate]();
+		this._addAdoptedStyleSheets(true, this[adoptedStyleSheets]?.map(lazySheetMapper) ?? []);
 	}
 
 	disconnectedCallback() {
