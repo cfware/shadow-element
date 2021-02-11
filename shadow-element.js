@@ -7,8 +7,7 @@ import decamelize from '@cfware/decamelize';
 
 export {html, render};
 
-export const htmlFor = html.for;
-export const htmlNode = html.node;
+const htmlNode = html.node;
 
 export const [
 	renderCallback,
@@ -55,12 +54,16 @@ const lazySheetMapper = sheet => sheet();
 
 export const css = supportsAdoptedStyleSheets ? createConstructableStyleSheet : createLegacyStyleSheet;
 
+const adoptStyleSheets = (owner, sheets) => {
+	owner.adoptedStyleSheets = [
+		...owner.adoptedStyleSheets,
+		...sheets.map(lazySheetMapper)
+	];
+};
+
 export const adoptDocumentStyleSheets = (...sheets) => {
 	if (supportsAdoptedStyleSheets) {
-		document.adoptedStyleSheets = [
-			...document.adoptedStyleSheets,
-			...sheets.map(lazySheetMapper)
-		];
+		adoptStyleSheets(document, sheets);
 	} else {
 		document.head.append(...sheets.map(sheet => htmlNode`${sheet()}`));
 	}
@@ -210,12 +213,8 @@ export default class ShadowElement extends HTMLElement {
 	}
 
 	_addAdoptedStyleSheets(inSetup, sheets) {
-		sheets = sheets.map(lazySheetMapper);
 		if (supportsAdoptedStyleSheets) {
-			this._shadowRoot.adoptedStyleSheets = [
-				...this._shadowRoot.adoptedStyleSheets,
-				...sheets
-			];
+			adoptStyleSheets(this._shadowRoot, sheets);
 
 			if (inSetup) {
 				// Bypass debounce for initial render
@@ -224,7 +223,7 @@ export default class ShadowElement extends HTMLElement {
 		} else {
 			this._adoptedStyleSheets = [
 				...this._adoptedStyleSheets,
-				...sheets
+				...sheets.map(lazySheetMapper)
 			];
 			this[renderCallbackImmediate]();
 		}
