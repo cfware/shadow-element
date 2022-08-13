@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.17.0](https://github.com/cfware/shadow-element/compare/v0.16.3...v0.17.0) (2022-08-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* Do not export htmlNode or htmlFor
+* Make adoptedStyleSheets static
+
+### Features
+
+* Add addAdoptedStyleSheets ([da1d1af](https://github.com/cfware/shadow-element/commit/da1d1af894c89a26dedad234036d2fc9af0870cd))
+* Add adoptDocumentStyleSheets ([5466f0d](https://github.com/cfware/shadow-element/commit/5466f0d0f5c0acb37bd11381ae4c85a128060457))
+* Make adoptedStyleSheets static ([f2a9b1d](https://github.com/cfware/shadow-element/commit/f2a9b1d15f6c5a5ccd3760de5c859afea7a4fbda))
+
+
+### Bug Fixes
+
+* Do not export htmlNode or htmlFor ([76cb221](https://github.com/cfware/shadow-element/commit/76cb221e04425d8c4f6ca949809211faa1d6cd2e))
+
 ### [0.16.3](https://github.com/cfware/shadow-element/compare/v0.16.2...v0.16.3) (2021-02-08)
 
 
