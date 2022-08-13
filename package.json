@@ -11,7 +11,7 @@
 		"posttest": "nyc report --check-coverage"
 	},
 	"engines": {
-		"node": ">=14.0.0"
+		"node": ">=16.12.0"
 	},
 	"author": "Corey Farrell",
 	"license": "MIT",
@@ -25,20 +25,20 @@
 	},
 	"homepage": "https://github.com/cfware/shadow-element#readme",
 	"dependencies": {
-		"@cfware/add-event-listener": "^0.1.3",
+		"@cfware/add-event-listener": "^0.1.4",
 		"@cfware/callback-array-once": "^1.0.4",
 		"@cfware/debouncer": "^0.3.3",
 		"@cfware/decamelize": "^0.1.2",
 		"@cfware/symbols": "^0.1.0",
-		"uhtml": "^2.1.2"
+		"uhtml": "^3.0.1"
 	},
 	"devDependencies": {
-		"@cfware/fastify-test-helper": "^0.7.0",
-		"@cfware/lint": "^2.0.4",
-		"@cfware/nyc": "^0.7.0",
-		"@cfware/tap-selenium-manager": "^1.1.0",
-		"libtap": "^0.3.0",
+		"@cfware/fastify-test-helper": "^0.8.0",
+		"@cfware/lint": "^3.0.2",
+		"@cfware/nyc": "^0.7.1",
+		"@cfware/tap-selenium-manager": "^2.0.0",
+		"libtap": "^1.4.0",
 		"nyc": "^15.1.0",
-		"tap-yaml-summary": "^0.1.0"
+		"tap-yaml-summary": "^0.2.0"
 	}
 }

@@ -245,6 +245,17 @@ const pages = {
 		await selenium.executeScript(element => element.taller(), element);
 		t.equal(await element.getCssValue('width'), '10px');
 		t.equal(await element.getCssValue('height'), '20px');
+	},
+
+	async 'css-no-adoption.html'(t, selenium) {
+		const element = await selenium.findElement({id: 'test'});
+
+		t.equal(await element.getCssValue('height'), '10px');
+		t.equal(await element.getCssValue('min-height'), '5px');
+
+		await selenium.executeScript(element => element.taller(), element);
+		t.equal(await element.getCssValue('width'), '10px');
+		t.equal(await element.getCssValue('height'), '20px');
 	}
 };
 
