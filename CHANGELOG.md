@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/cfware/shadow-element/compare/v0.17.0...v1.0.0) (2023-10-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* Update dependencies
+
+### Features
+
+* Update dependencies ([2e84feb](https://github.com/cfware/shadow-element/commit/2e84febcdd393964bc61af20e17bdd954dd9ff77))
+
 ## [0.17.0](https://github.com/cfware/shadow-element/compare/v0.16.3...v0.17.0) (2022-08-13)
 
 
