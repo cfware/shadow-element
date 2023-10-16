@@ -1,28 +1,28 @@
 <html>
-	<head>
-		<script type="module">
-			import ShadowElement, {html, template, booleanAttribute, reflectBooleanProperties, define} from '/shadow-element.js';
+    <head>
+        <script type="module">
+            import ShadowElement, {html, template, booleanAttribute, reflectBooleanProperties, define} from '/shadow-element.js';
 
-			const observedAttributes = new Set();
-			class BooleanProp extends ShadowElement {
-				get [template]() {
-					return html`${this.booleanProp}`;
-				}
+            const observedAttributes = new Set();
+            class BooleanProp extends ShadowElement {
+                get [template]() {
+                    return html`${this.booleanProp}`;
+                }
 
-				static get observedAttributes() {
-					return observedAttributes;
-				}
+                static get observedAttributes() {
+                    return observedAttributes;
+                }
 
-				checkBooleanAttribute(value) {
-					return booleanAttribute(value);
-				}
-			}
+                checkBooleanAttribute(value) {
+                    return booleanAttribute(value);
+                }
+            }
 
-			reflectBooleanProperties(BooleanProp, ['booleanProp']);
-			BooleanProp[define]('boolean-prop');
-		</script>
-	</head>
-	<body>
-		<boolean-prop id="test"></boolean-prop>
-	</body>
+            reflectBooleanProperties(BooleanProp, ['booleanProp']);
+            BooleanProp[define]('boolean-prop');
+        </script>
+    </head>
+    <body>
+        <boolean-prop id="test"></boolean-prop>
+    </body>
 </html>

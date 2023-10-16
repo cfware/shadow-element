@@ -1,58 +1,58 @@
 <html>
-	<head>
-		<script type="module">
-			import ShadowElement, {html, template, lifecycleEvents, define} from '/shadow-element.js';
+    <head>
+        <script type="module">
+            import ShadowElement, {html, template, lifecycleEvents, define} from '/shadow-element.js';
 
-			const symKeyPress = Symbol();
-			const elementClick = Symbol();
-			class EventSetup extends ShadowElement {
-				static [lifecycleEvents] = new Map([
-					[undefined, {
-						click: elementClick
-					}],
-					[document, {
-						click: event => {
-							document.documentClicks++;
-						}
-					}],
-					[window, {
-						keypress: symKeyPress,
-						click: '_windowClick'
-					}]
-				]);
+            const symKeyPress = Symbol();
+            const elementClick = Symbol();
+            class EventSetup extends ShadowElement {
+                static [lifecycleEvents] = new Map([
+                    [undefined, {
+                        click: elementClick
+                    }],
+                    [document, {
+                        click: event => {
+                            document.documentClicks++;
+                        }
+                    }],
+                    [window, {
+                        keypress: symKeyPress,
+                        click: '_windowClick'
+                    }]
+                ]);
 
-				constructor() {
-					super();
+                constructor() {
+                    super();
 
-					this.keyPresses = 0;
-					this.windowClicks = 0;
-					this.elementClicks = 0;
-				}
+                    this.keyPresses = 0;
+                    this.windowClicks = 0;
+                    this.elementClicks = 0;
+                }
 
-				get [template]() {
-					return html`nothing`;
-				}
+                get [template]() {
+                    return html`nothing`;
+                }
 
-				[symKeyPress](event) {
-					this.keyPresses++;
-				}
+                [symKeyPress](event) {
+                    this.keyPresses++;
+                }
 
-				[elementClick](event) {
-					this.elementClicks++;
-				}
+                [elementClick](event) {
+                    this.elementClicks++;
+                }
 
-				_windowClick(event) {
-					document.windowClicks++;
-					this.windowClicks++;
-				}
-			}
+                _windowClick(event) {
+                    document.windowClicks++;
+                    this.windowClicks++;
+                }
+            }
 
-			document.windowClicks = 0;
-			document.documentClicks = 0;
-			EventSetup[define]('event-setup');
-		</script>
-	</head>
-	<body>
-		<event-setup id="test" tabindex="0"></event-setup>
-	</body>
+            document.windowClicks = 0;
+            document.documentClicks = 0;
+            EventSetup[define]('event-setup');
+        </script>
+    </head>
+    <body>
+        <event-setup id="test" tabindex="0"></event-setup>
+    </body>
 </html>

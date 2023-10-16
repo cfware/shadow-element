@@ -1,19 +1,19 @@
 <html>
-	<head>
-		<script type="module">
-			import ShadowElement, {html, template, reflectStringProperties, define} from '/shadow-element.js';
+    <head>
+        <script type="module">
+            import ShadowElement, {html, template, reflectStringProperties, define} from '/shadow-element.js';
 
-			class StringProp extends ShadowElement {
-				get [template]() {
-					return html`${this.stringProp}`;
-				}
-			}
+            class StringProp extends ShadowElement {
+                get [template]() {
+                    return html`${this.stringProp}`;
+                }
+            }
 
-			reflectStringProperties(StringProp, {stringProp: 'String Prop', undefinable: undefined});
-			StringProp[define]('string-prop');
-		</script>
-	</head>
-	<body>
-		<string-prop id="test"></string-prop>
-	</body>
+            reflectStringProperties(StringProp, {stringProp: 'String Prop', undefinable: undefined});
+            StringProp[define]('string-prop');
+        </script>
+    </head>
+    <body>
+        <string-prop id="test"></string-prop>
+    </body>
 </html>

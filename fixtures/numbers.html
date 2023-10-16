@@ -1,19 +1,19 @@
 <html>
-	<head>
-		<script type="module">
-			import ShadowElement, {html, template, reflectNumericProperties, define} from '/shadow-element.js';
+    <head>
+        <script type="module">
+            import ShadowElement, {html, template, reflectNumericProperties, define} from '/shadow-element.js';
 
-			class NumericProp extends ShadowElement {
-				get [template]() {
-					return html`${this.numericProp}`;
-				}
-			}
+            class NumericProp extends ShadowElement {
+                get [template]() {
+                    return html`${this.numericProp}`;
+                }
+            }
 
-			reflectNumericProperties(NumericProp, {numericProp: 5});
-			NumericProp[define]('numeric-prop');
-		</script>
-	</head>
-	<body>
-		<numeric-prop id="test"></numeric-prop>
-	</body>
+            reflectNumericProperties(NumericProp, {numericProp: 5});
+            NumericProp[define]('numeric-prop');
+        </script>
+    </head>
+    <body>
+        <numeric-prop id="test"></numeric-prop>
+    </body>
 </html>

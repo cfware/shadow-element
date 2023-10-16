@@ -1,27 +1,27 @@
 <html>
-	<head>
-		<script type="module">
-			import ShadowElement, {html, template, wireRenderProperties, define} from '/shadow-element.js';
+    <head>
+        <script type="module">
+            import ShadowElement, {html, template, wireRenderProperties, define} from '/shadow-element.js';
 
-			class RenderProp extends ShadowElement {
-				renderCount = 0;
+            class RenderProp extends ShadowElement {
+                renderCount = 0;
 
-				get [template]() {
-					this.renderCount++;
-					return html`${this.renderCount}`;
-				}
-			}
+                get [template]() {
+                    this.renderCount++;
+                    return html`${this.renderCount}`;
+                }
+            }
 
-			wireRenderProperties(RenderProp, {
-				prop1: 'property 1',
-				get prop2() {
-					return [1, 2];
-				}
-			});
-			RenderProp[define]('render-prop');
-		</script>
-	</head>
-	<body>
-		<render-prop id="test"></render-prop>
-	</body>
+            wireRenderProperties(RenderProp, {
+                prop1: 'property 1',
+                get prop2() {
+                    return [1, 2];
+                }
+            });
+            RenderProp[define]('render-prop');
+        </script>
+    </head>
+    <body>
+        <render-prop id="test"></render-prop>
+    </body>
 </html>

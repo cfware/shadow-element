@@ -1,44 +1,45 @@
 {
-	"name": "@cfware/shadow-element",
-	"version": "0.17.0",
-	"description": "My uhtml based shadow element",
-	"main": "shadow-element.js",
-	"type": "module",
-	"scripts": {
-		"pretest": "cfware-lint .",
-		"tests-only": "nyc -s node test.js|tap-yaml-summary",
-		"test": "npm run -s tests-only",
-		"posttest": "nyc report --check-coverage"
-	},
-	"engines": {
-		"node": ">=16.12.0"
-	},
-	"author": "Corey Farrell",
-	"license": "MIT",
-	"keywords": [],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/cfware/shadow-element.git"
-	},
-	"bugs": {
-		"url": "https://github.com/cfware/shadow-element/issues"
-	},
-	"homepage": "https://github.com/cfware/shadow-element#readme",
-	"dependencies": {
-		"@cfware/add-event-listener": "^0.1.4",
-		"@cfware/callback-array-once": "^1.0.4",
-		"@cfware/debouncer": "^0.3.3",
-		"@cfware/decamelize": "^0.1.2",
-		"@cfware/symbols": "^0.1.0",
-		"uhtml": "^3.0.1"
-	},
-	"devDependencies": {
-		"@cfware/fastify-test-helper": "^0.8.0",
-		"@cfware/lint": "^3.0.2",
-		"@cfware/nyc": "^0.7.1",
-		"@cfware/tap-selenium-manager": "^2.0.0",
-		"libtap": "^1.4.0",
-		"nyc": "^15.1.0",
-		"tap-yaml-summary": "^0.2.0"
-	}
+    "name": "@cfware/shadow-element",
+    "version": "0.17.0",
+    "description": "My uhtml based shadow element",
+    "main": "shadow-element.js",
+    "exports": "./shadow-element.js",
+    "type": "module",
+    "scripts": {
+        "pretest": "cfware-lint .",
+        "tests-only": "nyc -s node test.js|tap-yaml-summary",
+        "test": "npm run -s tests-only",
+        "posttest": "nyc report --check-coverage"
+    },
+    "engines": {
+        "node": ">=18"
+    },
+    "author": "Corey Farrell",
+    "license": "MIT",
+    "keywords": [],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/cfware/shadow-element.git"
+    },
+    "bugs": {
+        "url": "https://github.com/cfware/shadow-element/issues"
+    },
+    "homepage": "https://github.com/cfware/shadow-element#readme",
+    "dependencies": {
+        "@cfware/add-event-listener": "^1",
+        "@cfware/callback-array-once": "^1",
+        "@cfware/debouncer": "^1",
+        "@cfware/decamelize": "^1",
+        "@cfware/symbols": "^1",
+        "uhtml": "^3"
+    },
+    "devDependencies": {
+        "@cfware/fastify-test-helper": "^1",
+        "@cfware/lint": "^4",
+        "@cfware/nyc": "^1",
+        "@cfware/tap-selenium-manager": "^3",
+        "libtap": "^1",
+        "nyc": "^15",
+        "tap-yaml-summary": "^0.2"
+    }
 }

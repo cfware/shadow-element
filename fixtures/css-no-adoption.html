@@ -1,33 +1,33 @@
 <html>
-	<head>
-		<script>
-			delete Document.prototype.adoptedStyleSheets;
-		</script>
-		<script type="module">
-			import ShadowElement, {css, html, template, adoptedStyleSheets, addAdoptedStyleSheets, adoptDocumentStyleSheets, define} from '/shadow-element.js';
+    <head>
+        <script>
+            delete Document.prototype.adoptedStyleSheets;
+        </script>
+        <script type="module">
+            import ShadowElement, {css, html, template, adoptedStyleSheets, addAdoptedStyleSheets, adoptDocumentStyleSheets, define} from '/shadow-element.js';
 
-			adoptDocumentStyleSheets(css`stylized-element{min-height:5px;}`);
+            adoptDocumentStyleSheets(css`stylized-element{min-height:5px;}`);
 
-			class StylizedElement extends ShadowElement {
-				static [adoptedStyleSheets] = [
-					css`:host{width:10px;height:${'10px'}}`
-				];
+            class StylizedElement extends ShadowElement {
+                static [adoptedStyleSheets] = [
+                    css`:host{width:10px;height:${'10px'}}`
+                ];
 
-				get [template]() {
-					return html``;
-				}
+                get [template]() {
+                    return html``;
+                }
 
-				taller() {
-					this[addAdoptedStyleSheets](css`
-						:host{height:20px}
-					`);
-				}
-			}
+                taller() {
+                    this[addAdoptedStyleSheets](css`
+                        :host{height:20px}
+                    `);
+                }
+            }
 
-			StylizedElement[define]('stylized-element');
-		</script>
-	</head>
-	<body>
-		<stylized-element id="test"></stylized-element>
-	</body>
+            StylizedElement[define]('stylized-element');
+        </script>
+    </head>
+    <body>
+        <stylized-element id="test"></stylized-element>
+    </body>
 </html>
