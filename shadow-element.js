@@ -7,7 +7,7 @@ import decamelize from '@cfware/decamelize';
 
 export {html, render};
 
-const htmlNode = html.node;
+export const htmlNode = html.node;
 
 export const [
     renderCallback,
